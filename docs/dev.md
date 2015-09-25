@@ -33,6 +33,14 @@ movement of these files to appropriate locations.
 * Where possible, firmware should attempt to mirror an existing controller 
 interface in order to minimise controller bloat in Johnny Five.
 
+// TODO - define any components here required in eeprom
+
+I2C Address location:   EEPROM[2]
+Backpack Ver Major:     EEPROM[3]
+Backpack Ver Minor:     EEPROM[4]
+Backpack Ver Patch:     EEPROM[5]
+
+
 ### Johnny Five
 
 * A complimentary controller should be provided by the library or made available
