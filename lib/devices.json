@@ -1,0 +1,22 @@
+{
+  "devices": [
+    {
+      "name": "node-pixel",
+      "build": "/firmware/build/backpack/",
+      "repo": "url",
+      "npm": "node-pixel",
+      "description": "Allows NeoPixels to be used via I2C and the node-pixel controller",
+      "docs": "url",
+      "address": "0x54"
+    },
+    {
+      "name": "HC-SR04",
+      "repo": "url",
+      "npm": "nodebots-interchange-hcsr04",
+      "build": "/firmware/build/backpack/",
+      "description": "Allows an HC-SR04 ultrasonic sensor to be used with the Proximity class and the HC-SR04-I2C controller",
+      "docs": "url",
+      "address": "0x55"
+    }
+  ]
+}
