@@ -46,7 +46,7 @@ git clone https://github.com/ajfisher/nodebots-interchange.git
 npm install
 ```
 
-Once installed you will have access to the `nbic` application which will allow
+Once installed you will have access to the `interchange` application which will allow
 you to flash your board with a firmware of choice.
 
 ## Usage
@@ -54,7 +54,7 @@ you to flash your board with a firmware of choice.
 In general:
 
 ```
-nbic <firmware> -p <port> -b <board_type> -a <I2C_address>
+interchange <firmware> -p <port> -b <board_type> -a <I2C_address>
 ```
 
 Where `<firmware>` is the name of the firmware you would like to flash to the board,
@@ -65,7 +65,7 @@ parameter allowing you to change the default address of the I2C device.
 Available firmware and their descriptions can be found by running:
 
 ```
-nbic --list
+interchange --list
 ```
 
 

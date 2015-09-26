@@ -2,7 +2,6 @@
   "name": "nodebots-interchange",
   "version": "0.0.1",
   "description": "Tool to build custom backpack firmwares to make devices I2C compliant",
-  "main": "index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
@@ -25,5 +24,11 @@
   "bugs": {
     "url": "https://github.com/ajfisher/nodebots-interchange/issues"
   },
-  "homepage": "https://github.com/ajfisher/nodebots-interchange#readme"
+  "homepage": "https://github.com/ajfisher/nodebots-interchange#readme",
+  "bin": {
+    "interchange": "bin/interchange.js"
+  },
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
 }
