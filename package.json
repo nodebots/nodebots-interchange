@@ -1,6 +1,6 @@
 {
   "name": "nodebots-interchange",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tool to build custom backpack firmwares to make devices I2C compliant",
   "directories": {
     "doc": "docs",
