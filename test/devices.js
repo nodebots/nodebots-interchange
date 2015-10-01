@@ -26,11 +26,8 @@ exports["Devices - Library"] = {
             } else {
                 test.ok(false, "Repo and npm not present");
             }
-
         });
-
 
         test.done();
     },
-
 };

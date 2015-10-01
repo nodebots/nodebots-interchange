@@ -10,9 +10,12 @@ I2C device.
 
 ## Supported boards
 
-* Arduino Uno
-* Arduino Nano
-* Arduino ProMini
+The following boards are supported and all interchange compliant firmwares must
+have builds and precompiled binaries for at minimum these boards.
+
+* Arduino Uno (called `uno`)
+* Arduino Nano (called `nano`)
+* Arduino ProMini (called `promini`)
 
 ## Environment set up
 
@@ -45,18 +48,33 @@ Backpack Ver Patch:     EEPROM[5]
 
 * A complimentary controller should be provided by the library or made available
 in Johnny-Five directly. 
-* Where possible, an existing controller should be used and an alias 
+* Where possible, an existing controller should be used and an alias created
 
 ## Build of firmware
 
 * use Grunt to create files for build
 * Use Arduino IDE to automate build of each type of firmware outputting HEX files.
-* Put hex files into repos according to the specified file structure so they can
-be retrieved appropriately.
+* Put hex files into a folder (eg `/firmware/bins/`) with each of the hex files
+for the different supported boards in a separate directory per it's reference 
+name, for example: `/firmware/bins/uno/...` 
+
 
 ## Repo structure
 
-* Document the structure here of how the repo should be structured.
+There are certain mandatories that must be in the repo as outlined below.
+
+### Manifest file
+
+A manifest file must be present at the root of the repo and called `manifest.json`.
+This will comprise any repo specific components to do with, for example, paths 
+to binary firmwares etc.
+
+Current manifest file requirements
+```
+{
+    "bins": "/firmware/bins/", // path to the precompiled folder from the root of the repo
+}
+```
 
 ## Publishing to Interchange
 

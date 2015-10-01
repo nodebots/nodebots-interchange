@@ -68,8 +68,6 @@ Available firmware and their descriptions can be found by running:
 interchange --list
 ```
 
-
-
 ## Building your own interchange package.
 
 If you want to build your own interchange package you can get more information
