@@ -29,6 +29,7 @@
     "interchange": "bin/interchange.js"
   },
   "dependencies": {
+    "avrgirl-arduino": "^1.4.0",
     "minimist": "^1.2.0"
   }
 }
