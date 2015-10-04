@@ -1,6 +1,10 @@
 # Interchange Changelog
 
-## Pre-alpha
+
+## 0.1.0
+
+* End to end test capable on hc-sr04 device
+* added core of the interchange file that glues everything together
 
 ### 0.0.3
 
