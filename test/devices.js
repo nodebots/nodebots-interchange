@@ -30,4 +30,11 @@ exports["Devices - Library"] = {
 
         test.done();
     },
+
+    checkManifestFiles: function(test) {
+        test.expect(1);
+
+        test.ok(false, "No manifest files found");
+        test.done();
+    },
 };

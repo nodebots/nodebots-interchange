@@ -30,6 +30,9 @@
   },
   "dependencies": {
     "avrgirl-arduino": "^1.4.0",
-    "minimist": "^1.2.0"
+    "download": "^4.2.1",
+    "lodash": "^3.10.1",
+    "minimist": "^1.2.0",
+    "tmp": "0.0.28"
   }
 }
