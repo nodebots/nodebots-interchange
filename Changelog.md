@@ -1,5 +1,11 @@
 # Interchange Changelog
 
+### 0.1.1
+
+* Removed some dependencies and rationalised that to Download
+* Put better error handling on download steps
+* Added facility to clean up the temp directory after being finished within it 
+so as not to litter peep's filesystem
 
 ## 0.1.0
 

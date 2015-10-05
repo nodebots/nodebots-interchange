@@ -79,3 +79,13 @@ If you are interesting in contibuting, please read the [dev getting started
 guide](/docs/contribution.md).
 
 Additional documentation: https://docs.google.com/document/d/1j6Jce2MUSA-V-I9iO6lReZGtDWXvi9BI2Xh1RjErYek/edit?usp=sharing
+
+# Acknowledgements
+
+This project would not have seen light were it not for the following people:
+
+* Rick Waldron - believing this was a good approach and supporting the exploration
+of the idea to augment Johnny Five.
+* Suz Hinton - for the excellent avrgirl which provided considerable heavy lifting on the 
+flashing side of things.
+* Andy Gelme, Luis Montes - for pushing me on backpacks and keep me moving.
