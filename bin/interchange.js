@@ -1,16 +1,24 @@
 #! /usr/bin/env node
-var _ = require('lodash');
-var argv = require('minimist')(process.argv.slice(2));
+var _       = require('lodash');
+var argv    = require('minimist')(process.argv.slice(2));
 var Avrgirl = require('avrgirl-arduino');
-var Download = require('download');
-var fs = require('fs');
-var http = require('http');
-var path = require("path");
-var request = require('request');
-var tmp = require('tmp');
+var Download= require('download');
+var fs      = require('fs');
+var fsextra = require('fs-extra');
+var http    = require('http');
+var path    = require("path");
+var tmp     = require('tmp');
 
 var version = require('../package.json').version;
 var devices = require('../lib/devices.json').devices;
+
+function clean_temp_dir(tmpdir) {
+    // takes a temporary directory and cleans up any files within it and
+    // then calls the callback to remove itself.
+
+    fsextra.emptyDirSync(tmpdir.name);
+    tmpdir.removeCallback();
+}
 
 function display_help() {
     // this function displays the help on this script.
@@ -60,8 +68,6 @@ function flash_firmware(firmware, opts, cb) {
         console.info("flashed");
         cb();
     });
-
-
 }
 
 function check_firmware(firmware, options, cb) {
@@ -102,31 +108,40 @@ function check_firmware(firmware, options, cb) {
     // start getting the hex file.
     //
 
-    request(manifest_uri, function(err, resp, body) {
-        if (! err && resp.statusCode == 200) {
-            var manifest = JSON.parse(body);
+    var tmp_dir = tmp.dirSync();
+    new Download()
+        .get(manifest_uri + "fhdjkfsd", tmp_dir.name)
+        .run(function(err, manifest_files) {
+
+            if (err) {
+                console.error(err);
+                clean_temp_dir(tmp_dir);
+                throw err;
+            }
+
+            try {
+                var manifest = JSON.parse(fs.readFileSync(manifest_files[0].path));
+            } catch (e) {
+                console.error("Manifest file incorrect");
+                clean_temp_dir(tmp_dir);
+                throw "Manifest file error"
+            }
 
             // now we need to download the hex file. 
             var hex_uri = base_uri + manifest.bins + boardtype + manifest.hexPath;
 
-            var tmp_dir = tmp.dirSync();
-            
             console.info("Downloading hex file")
             new Download()
                 .get(hex_uri, tmp_dir.name)
-                .run(function(err, files) {
+                .run(function(err, hex_files) {
                     if (err) {
-                        console.log(err);
-                        process.exit(1);
+                        console.error(err);
+                        clean_temp_dir(tmp_dir);
+                        throw err;
                     }
-
-                    cb(files[0].path, tmp_dir);
+                    cb(hex_files[0].path, tmp_dir);
                 });
-
-        } else {
-            throw "Can't find manifest file";
-        }
-    });
+        });
 }
 
 if (argv.h || argv.help) {
@@ -160,13 +175,12 @@ if (argv._[0] == "list") {
 
             flash_firmware(hex_path, opts, function() {
                 // once complete destory the tmp_dir.
-                fs.unlinkSync(hex_path);
-                tmp_dir.removeCallback();
+                clean_temp_dir(tmp_dir);
             });
             
         });
     } catch (e) {
-        console.log(e);
+        console.error(e);
         process.exit(1);
     }
     
