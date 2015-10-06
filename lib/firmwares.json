@@ -1,18 +1,23 @@
 {
-  "devices": [
+  "firmwares": [
     {
       "name": "node-pixel",
       "repo": "url",
-      "npm": "node-pixel",
+      "npm": {
+          "package": "node-pixel",
+          "version": "latest"
+      },
       "description": "Allows NeoPixels to be used via I2C and the node-pixel controller",
       "docs": "url",
-      "address": "0x54"
+      "address": "0x54",
+      "firmata": true
     },
     {
       "name": "hc-sr04",
       "repo": "git+https://github.com/ajfisher/nodebots-hcsr04",
       "description": "Allows an HC-SR04 ultrasonic sensor to be used with the Proximity class and the HC-SR04-I2C controller",
       "docs": "url",
+      "firmata": true,
       "address": "0x75"
     }
   ]
