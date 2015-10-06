@@ -10,7 +10,7 @@ var path    = require("path");
 var tmp     = require('tmp');
 
 var version = require('../package.json').version;
-var devices = require('../lib/devices.json').devices;
+var firmwares = require('../lib/firmwares.json').firmwares;
 
 function clean_temp_dir(tmpdir) {
     // takes a temporary directory and cleans up any files within it and
@@ -32,6 +32,7 @@ function display_help() {
                 "  -a --board           Board type [uno|nano|promini] - default nano\n" +
                 "  -p --port            Path to serial port / com port (eg. COM1, /dev/ttyUSB0 etc)\n" +
                 "  -I --i2c-address     Set I2C address override [NOT IMPLEMENTED]\n" +
+                "     --firmata         Use custom firmata if it is present\n" +
                 "  -h --help            Prints this message and exits\n" +
                 "  -v --version         Print version\n" +
                 "\n\n";
@@ -42,8 +43,15 @@ function display_help() {
 function list_devices() {
     // this function lists out all of the devices available to have firmware
     // installed.
-    devices.forEach(function(firmware) {
-        console.log(firmware.name + ": " + firmware.description);
+    //
+    //
+
+    console.log("\nFirmwares available for backpacks. (f) denotes a firmata version is available\n");
+    _.sortBy(firmwares, "name").forEach(function(firmware) {
+        var outstr = "  " + firmware.name + 
+            (firmware.firmata ? " (f)" : "") + ":  " +
+            firmware.description;
+        console.log(outstr);
     });
 }
 
@@ -75,10 +83,11 @@ function check_firmware(firmware, options, cb) {
     // to a temporary location
 
     var boardtype = options.board || "nano"; // assumes nano if none provided
+    var useFirmata = (options.firmata != null) || false;
 
     // see if the firmware is in the directory
-    var fw = _.find(devices, function(device) {
-        return device.name == firmware;
+    var fw = _.find(firmwares, function(f) {
+        return f.name == firmware;
     });
 
     if (fw == undefined) {
@@ -91,8 +100,7 @@ function check_firmware(firmware, options, cb) {
     if (fw.npm == undefined) {
         // use git repo
         console.info("GH repo - retrieving manifest data");
-
-        if (fw.repo.indexOf('git') == 0) {
+        if (fw.repo.indexOf('git+https') == 0) {
             base_uri = "https://raw.githubusercontent.com" + fw.repo.substring(22) + "/master";
             manifest_uri = base_uri + "/manifest.json";
         }
@@ -110,7 +118,7 @@ function check_firmware(firmware, options, cb) {
 
     var tmp_dir = tmp.dirSync();
     new Download()
-        .get(manifest_uri + "fhdjkfsd", tmp_dir.name)
+        .get(manifest_uri, tmp_dir.name)
         .run(function(err, manifest_files) {
 
             if (err) {
@@ -128,7 +136,13 @@ function check_firmware(firmware, options, cb) {
             }
 
             // now we need to download the hex file. 
-            var hex_uri = base_uri + manifest.bins + boardtype + manifest.hexPath;
+
+            var manifest_objects = (useFirmata ? manifest.firmata : manifest.backpack);
+
+            if (manifest_objects.hexPath.indexOf("/") != 0) {
+                manifest_objects.hexPath = "/" + manifest_objects.hexPath;
+            }
+            var hex_uri = base_uri + manifest_objects.bins + boardtype + manifest_objects.hexPath;
 
             console.info("Downloading hex file")
             new Download()
@@ -168,6 +182,7 @@ if (argv._[0] == "list") {
     var opts = {
         board: argv.a || argv.board || process.env.INTERCHANGE_BOARD || "nano",
         port: argv.p || argv.port || process.env.INTERCHANGE_PORT || "",
+        firmata: argv.firmata || null,
     };
 
     try {
@@ -182,7 +197,6 @@ if (argv._[0] == "list") {
     } catch (e) {
         console.error(e);
         process.exit(1);
-    }
-    
+    }   
 }
 
