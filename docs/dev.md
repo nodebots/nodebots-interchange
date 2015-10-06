@@ -72,7 +72,16 @@ to binary firmwares etc.
 Current manifest file requirements
 ```
 {
-    "bins": "/firmware/bins/", // path to the precompiled folder from the root of the repo
+    "backpack" : {
+        // information for the backpack files
+        "bins": "/firmware/bins/backpack/", // path to the precompiled binaries folder from the root of the repo
+        "hexPath": "/firmware_backpack.hex" // path from the package folder to the actual hex file
+    }
+    "firmata" : {
+        // information for the firmata files
+        "bins": "/firmware/bins/firmata/", // path to the precompiled binaries folder from the root of the repo
+        "hexPath": "/firmware_firmata.hex" // path from the package folder to the actual hex file
+    }
 }
 ```
 

@@ -33,7 +33,7 @@ backpack firmware selection and installation easy.
 
 To install nodebots-interchange install from npm
 
-(CURRENTLY THIS DOESN'T WORK AS IT HASN'T BEEN PUBLISHED)
+(CURRENTLY THIS DOESN'T WORK AS IT HASN'T BEEN PUBLISHED BUT THIS IS PREDICTED)
 
 ```
 npm install nodesbots-interchange
@@ -54,7 +54,7 @@ you to flash your board with a firmware of choice.
 In general:
 
 ```
-interchange <firmware> -p <port> -b <board_type> -a <I2C_address>
+interchange <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata]
 ```
 
 Where `<firmware>` is the name of the firmware you would like to flash to the board,
@@ -62,10 +62,19 @@ Where `<firmware>` is the name of the firmware you would like to flash to the bo
 specific type of board you would like to use and `<I2C_address>` is an optional
 parameter allowing you to change the default address of the I2C device.
 
+Using the `--firmata` switch will attempt to download and install a custom firmata
+instead if this is available.
+
 Available firmware and their descriptions can be found by running:
 
 ```
-interchange --list
+interchange list
+```
+
+Get help using:
+
+```
+interchange --help
 ```
 
 ## Building your own interchange package.
