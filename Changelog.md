@@ -1,5 +1,16 @@
 # Interchange Changelog
 
+### 0.1.2
+
+* Fixed manifest bug that was present from error checking
+* Migrated to new manifest style
+* Included ability to use `--firmata` to indicate installation of custom firmata 
+if it is available.
+* updates to readme to bring back in line
+* changed npm structure in devices to reflect installation using npm versions
+correctly.
+* refactored to be firmware_list not devices so it makes more sense. 
+
 ### 0.1.1
 
 * Removed some dependencies and rationalised that to Download
