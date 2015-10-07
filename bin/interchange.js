@@ -43,8 +43,6 @@ function display_help() {
 function list_devices() {
     // this function lists out all of the devices available to have firmware
     // installed.
-    //
-    //
 
     console.log("\nFirmwares available for backpacks. (f) denotes a firmata version is available\n");
     _.sortBy(firmwares, "name").forEach(function(firmware) {
@@ -78,44 +76,22 @@ function flash_firmware(firmware, opts, cb) {
     });
 }
 
-function check_firmware(firmware, options, cb) {
-    // checks if the firmware makes sense and downloads the hex file
-    // to a temporary location
+function download_from_github(firmware, options, cb) {
+    // downloads the firmware from the GH repo
 
-    var boardtype = options.board || "nano"; // assumes nano if none provided
-    var useFirmata = (options.firmata != null) || false;
-
-    // see if the firmware is in the directory
-    var fw = _.find(firmwares, function(f) {
-        return f.name == firmware;
-    });
-
-    if (fw == undefined) {
-        throw "No firmware found: " + firmware;
-    }
-
-    // now check if the firmware is in npm or github.
+    console.info("GH repo - retrieving manifest data");
     var manifest_uri = null;
     var base_uri = null;
-    if (fw.npm == undefined) {
-        // use git repo
-        console.info("GH repo - retrieving manifest data");
-        if (fw.repo.indexOf('git+https') == 0) {
-            base_uri = "https://raw.githubusercontent.com" + fw.repo.substring(22) + "/master";
-            manifest_uri = base_uri + "/manifest.json";
-        }
-    } else {
-        // do npm check here TODO
-    }
-   
+    if (firmware.repo.indexOf('git+https') == 0) {
+        base_uri = "https://raw.githubusercontent.com" + firmware.repo.substring(22) + "/master";
+        manifest_uri = base_uri + "/manifest.json";
+    } 
+
     if (manifest_uri == null) {
         throw "Can't find manifest of " + firmware;
     }
-   
-    // return the manifest file here as a loader and then hand it over to then
+    // download the manifest file and then hand it over to then
     // start getting the hex file.
-    //
-
     var tmp_dir = tmp.dirSync();
     new Download()
         .get(manifest_uri, tmp_dir.name)
@@ -137,12 +113,12 @@ function check_firmware(firmware, options, cb) {
 
             // now we need to download the hex file. 
 
-            var manifest_objects = (useFirmata ? manifest.firmata : manifest.backpack);
+            var manifest_objects = (options.useFirmata ? manifest.firmata : manifest.backpack);
 
             if (manifest_objects.hexPath.indexOf("/") != 0) {
                 manifest_objects.hexPath = "/" + manifest_objects.hexPath;
             }
-            var hex_uri = base_uri + manifest_objects.bins + boardtype + manifest_objects.hexPath;
+            var hex_uri = base_uri + manifest_objects.bins + options.boardtype + manifest_objects.hexPath;
 
             console.info("Downloading hex file")
             new Download()
@@ -156,6 +132,46 @@ function check_firmware(firmware, options, cb) {
                     cb(hex_files[0].path, tmp_dir);
                 });
         });
+
+}
+
+function check_firmware(firmware, options, cb) {
+    // checks if the firmware makes sense and downloads the hex file
+    // to a temporary location
+
+    var boardtype = options.board || "nano"; // assumes nano if none provided
+    var useFirmata = (options.firmata != null) || false;
+
+    // see if the firmware is in the directory
+    var fw = _.find(firmwares, function(f) {
+        return f.name == firmware;
+    });
+
+    if (fw == undefined) {
+        throw "No firmware found: " + firmware;
+    } else {
+        // we have a firmware - check if we need firmata 
+        if (useFirmata) {
+            if (! fw.firmata) {
+                throw "Firmware " + fw.name + "  doesn't support custom firmata"
+            }
+        }
+    }
+
+
+    // now check if the firmware is in npm or github.
+    if (fw.npm == undefined) {
+        // use git repo
+        download_from_github(fw, {
+            useFirmata: useFirmata,
+            boardtype: boardtype,
+        }, cb);
+
+    } else {
+        // do npm check here TODO
+    }
+   
+   
 }
 
 if (argv.h || argv.help) {

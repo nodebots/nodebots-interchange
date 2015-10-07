@@ -1,5 +1,11 @@
 # Interchange Changelog
 
+### 0.1.3
+
+* refactored code to allow for different ways to get the code to download the
+files for flashing to the board.
+
+
 ### 0.1.2
 
 * Fixed manifest bug that was present from error checking
