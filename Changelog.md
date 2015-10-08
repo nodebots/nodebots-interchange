@@ -1,10 +1,16 @@
 # Interchange Changelog
 
+### 0.1.4
+
+* Added capability to load standard firmata directly with `install StandardFirmata`
+* updated docs, fixed paths for the manifest file
+* Updated hex and manifest download to put a timestamp on end of the request 
+because github raw has a very long cache.
+
 ### 0.1.3
 
 * refactored code to allow for different ways to get the code to download the
 files for flashing to the board.
-
 
 ### 0.1.2
 
