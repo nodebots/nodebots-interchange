@@ -28,6 +28,7 @@ Interchange provides the following:
 * An installation method for backpack firmware onto target boards to make 
 backpack firmware selection and installation easy.
 * A method of updating select parts of the firmware if required.
+* An ability to install Standard or Custom Firmatas to an arduino.
 
 ## Installation
 
@@ -54,7 +55,7 @@ you to flash your board with a firmware of choice.
 In general:
 
 ```
-interchange <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata]
+interchange install <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata]
 ```
 
 Where `<firmware>` is the name of the firmware you would like to flash to the board,
@@ -64,6 +65,12 @@ parameter allowing you to change the default address of the I2C device.
 
 Using the `--firmata` switch will attempt to download and install a custom firmata
 instead if this is available.
+
+As a convenience, if you would like to install StandardFirmata you can do so by:
+
+```
+interchange install StandardFirmata -a <board> -p <port>
+```
 
 Available firmware and their descriptions can be found by running:
 

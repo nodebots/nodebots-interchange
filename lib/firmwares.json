@@ -19,6 +19,13 @@
       "docs": "url",
       "firmata": true,
       "address": "0x75"
+    },
+    {
+      "name": "StandardFirmata",
+      "repo": "git+https://github.com/ajfisher/interchange-firmata",
+      "description": "Installs standard firmata onto an arduino",
+      "docs": "url",
+      "firmata": true
     }
   ]
 }

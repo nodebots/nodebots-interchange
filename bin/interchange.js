@@ -25,6 +25,7 @@ function display_help() {
     
     var usage = "NodeBots Interchange - backpack utilities - Version: " + version + "\n\n" +
                 "usage: interchange install [firmware] [arguments]\n" +
+                "   or: interchange install StandardFirmata [arguments]\n"
                 "   or: interchange list\n" +
                 "   or: interchange --help\n" +
                 "\n" +
@@ -84,7 +85,7 @@ function download_from_github(firmware, options, cb) {
     var base_uri = null;
     if (firmware.repo.indexOf('git+https') == 0) {
         base_uri = "https://raw.githubusercontent.com" + firmware.repo.substring(22) + "/master";
-        manifest_uri = base_uri + "/manifest.json";
+        manifest_uri = base_uri + "/manifest.json?" + (new Date().getTime());
     } 
 
     if (manifest_uri == null) {
@@ -118,7 +119,8 @@ function download_from_github(firmware, options, cb) {
             if (manifest_objects.hexPath.indexOf("/") != 0) {
                 manifest_objects.hexPath = "/" + manifest_objects.hexPath;
             }
-            var hex_uri = base_uri + manifest_objects.bins + options.boardtype + manifest_objects.hexPath;
+            var hex_uri = base_uri + manifest_objects.bins + options.boardtype + 
+                            manifest_objects.hexPath + "?" + (new Date().getTime());
 
             console.info("Downloading hex file")
             new Download()
@@ -132,7 +134,6 @@ function download_from_github(firmware, options, cb) {
                     cb(hex_files[0].path, tmp_dir);
                 });
         });
-
 }
 
 function check_firmware(firmware, options, cb) {
@@ -140,7 +141,7 @@ function check_firmware(firmware, options, cb) {
     // to a temporary location
 
     var boardtype = options.board || "nano"; // assumes nano if none provided
-    var useFirmata = (options.firmata != null) || false;
+    var useFirmata = (firmware.indexOf('Firmata') > 0) || (options.firmata != null) || false;
 
     // see if the firmware is in the directory
     var fw = _.find(firmwares, function(f) {
@@ -157,7 +158,6 @@ function check_firmware(firmware, options, cb) {
             }
         }
     }
-
 
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {
@@ -207,12 +207,10 @@ if (argv._[0] == "list") {
             flash_firmware(hex_path, opts, function() {
                 // once complete destory the tmp_dir.
                 clean_temp_dir(tmp_dir);
-            });
-            
+            });            
         });
     } catch (e) {
         console.error(e);
         process.exit(1);
     }   
 }
-
