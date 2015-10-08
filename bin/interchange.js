@@ -2,6 +2,7 @@
 var _       = require('lodash');
 var argv    = require('minimist')(process.argv.slice(2));
 var Avrgirl = require('avrgirl-arduino');
+var child_process = require('child_process');
 var Download= require('download');
 var fs      = require('fs');
 var fsextra = require('fs-extra');
@@ -15,9 +16,10 @@ var firmwares = require('../lib/firmwares.json').firmwares;
 function clean_temp_dir(tmpdir) {
     // takes a temporary directory and cleans up any files within it and
     // then calls the callback to remove itself.
-
-    fsextra.emptyDirSync(tmpdir.name);
-    tmpdir.removeCallback();
+    if (tmpdir != undefined && tmpdir !== null && tmpdir !== "") {
+        fsextra.emptyDirSync(tmpdir.name);
+        tmpdir.removeCallback();
+    }
 }
 
 function display_help() {
@@ -76,6 +78,57 @@ function flash_firmware(firmware, opts, cb) {
         cb();
     });
 }
+
+function download_from_npm(firmware, options, cb) {
+    // downloads the firmware from the npm package
+
+    console.info("Installing " + firmware.name + " from npm");
+    // first try to install the npm package
+    var command = "npm install ";
+
+    // test to see if installing from a gh repo as an npm package.
+    if (firmware.npm.repo !== undefined) {
+        command = command + firmware.npm.repo;
+    } else {
+        command = command + firmware.npm.package + 
+            (firmware.npm.version !== "" ? "@" + firmware.npm.version : "");
+    }
+
+    try {
+        // simply call the command on the command line.
+        child_process.execSync(command, {stdio: [0,1,2]});
+    } catch (e) {
+        console.error(e);
+        throw "npm couldn't complete";
+    }
+    
+    // as we have installed get the manifest file.
+    var base_path = path.join(".", "node_modules", firmware.npm.package)
+    var manifest_file = path.join(base_path, "manifest.json");
+    try {
+        var manifest = JSON.parse(fs.readFileSync(manifest_file));
+    } catch (e) {
+        console.error("Manifest file incorrect");
+        throw "Manifest file error"
+    }
+
+    var manifest_objects = (options.useFirmata ? manifest.firmata : manifest.backpack);
+
+    if (manifest_objects.hexPath.indexOf("/") != 0) {
+        manifest_objects.hexPath = "/" + manifest_objects.hexPath;
+    }
+    var hex_path = path.join(base_path, manifest_objects.bins, options.boardtype, manifest_objects.hexPath);
+    console.log(hex_path);
+
+    cb(hex_path);
+    // If it passses then it will be in /node_modules/name
+    //
+    // So load manifest file etc from there.
+    //
+    // pass the hex file back.
+
+}
+
 
 function download_from_github(firmware, options, cb) {
     // downloads the firmware from the GH repo
@@ -159,19 +212,19 @@ function check_firmware(firmware, options, cb) {
         }
     }
 
+    var opts = {
+        useFirmata: useFirmata,
+        boardtype: boardtype,
+    };
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {
         // use git repo
-        download_from_github(fw, {
-            useFirmata: useFirmata,
-            boardtype: boardtype,
-        }, cb);
+        download_from_github(fw, opts, cb);
 
     } else {
-        // do npm check here TODO
+        // get from npm now
+        download_from_npm(fw, opts, cb);   
     }
-   
-   
 }
 
 if (argv.h || argv.help) {

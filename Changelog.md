@@ -1,5 +1,10 @@
 # Interchange Changelog
 
+## 0.2.0
+
+* Added ability to install from an npm package
+*
+
 ### 0.1.4
 
 * Added capability to load standard firmata directly with `install StandardFirmata`
