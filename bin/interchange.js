@@ -121,12 +121,6 @@ function download_from_npm(firmware, options, cb) {
     console.log(hex_path);
 
     cb(hex_path);
-    // If it passses then it will be in /node_modules/name
-    //
-    // So load manifest file etc from there.
-    //
-    // pass the hex file back.
-
 }
 
 
