@@ -19,29 +19,55 @@ have builds and precompiled binaries for at minimum these boards.
 
 ## Environment set up
 
-* Need arduino 1.6.4+
+* Use arduino 1.6.6+
 * Use environment variables for control
-* Include a default make file for build and flash.
 
 ## Code requirements
+
+In order to be compatible with Interchange the firmware that is put on the board
+needs to comply with a minimum set of interfaces. These are documented in 
+detail below.
 
 ### Firmware
 
 * Must read value from EEPROM called `I2C_ADDRESS` and use this in place of 
-default that is set.
+any default that is set.
 * Code must be compilable without the "installation" of any 3rd party libraries
-in the arduino environment. If required submodules can be used in git however
+in the arduino environment. If required, submodules can be used in git however
 the assumption is that the project gruntfile will take care of automating the
-movement of these files to appropriate locations.
-* Where possible, firmware should attempt to mirror an existing controller 
-interface in order to minimise controller bloat in Johnny Five.
+movement of these files to appropriate locations as needed
+* Where possible, firmware instructions should attempt to mirror an existing 
+controller interface in order to minimise controller bloat in Johnny Five.
 
-// TODO - define any components here required in eeprom
+The EEPROM of the device should follow the following memory map to keep things
+consistent.
 
-I2C Address location:   EEPROM[2]
-Backpack Ver Major:     EEPROM[3]
-Backpack Ver Minor:     EEPROM[4]
-Backpack Ver Patch:     EEPROM[5]
+| Memory position | Type | Name           | Description                                                |
+|-----------------|------|----------------|------------------------------------------------------------|
+| 0x00-0x07       | null | Reserved       | Reserved for future use                                    |
+| 0x08            | byte | I2C Address    | I2C Address of the device                                  |
+| 0x09            | bool | Custom Address | Using custom address (0x01 means using a custom address)   |
+| 0x0A            | byte | Firmware ID    | ID of the firmware being used (maps to the repository)     |
+| 0x0B            | byte | Creator ID     | ID of the creator of the firmware (maps to the repository) |
+|                 |      |                |                                                            |
+
+The firmware must expose a CONFIG mode in order to configure the device. Typically
+this will be done by pulling a pin HIGH during boot which will drop it into 
+configuration mode. A firmware CONFIG mode must work to the following standards:
+
+* Serial interface using 9600 BAUD 8N1 (standard arduino serial interface)
+* Messages are NL (`\n`) terminated for the send
+
+A firmware configuration must implement the following configuration options:
+
+| Command | Parameters | Action | Notes |
+|---------|----------------------------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| H | none | Help | Provides any help information relating to the firmware and config mode |
+| D | none | Dump settings | Prints out all of the current settings that the firmware has configured, providing at a minimum the I2C address, the version of the firmware, the firmware and creator IDs and whether a custom address is in use. |
+| I | address (byte) custom flag (bit) | Set address | Sets the I2C address of this device. eg: `I 0x56 1` sets the I2C address to 0x56 with custom flag set to True |
+| F | ID (byte) | Set Firmware ID | Sets the firmware ID of this device |
+| C | ID (byte) | Set creator ID | Sets the creator ID of this device |
+|  |  |  |  |
 
 
 ### Johnny Five
@@ -54,7 +80,7 @@ in Johnny-Five directly.
 
 * use Grunt to create files for build
 * Use Arduino IDE to automate build of each type of firmware outputting HEX files.
-* Put hex files into a folder (eg `/firmware/bins/`) with each of the hex files
+* Put compiled hex files into a folder (eg `/firmware/bins/`) with each of the hex files
 for the different supported boards in a separate directory per it's reference 
 name, for example: `/firmware/bins/uno/...` 
 
@@ -87,5 +113,6 @@ Current manifest file requirements
 
 ## Publishing to Interchange
 
-* Add a reference to the /lib/devices.json file with appropriate details
-* Note detail here about what is required.
+Add a reference to the /lib/firmwares.json file with appropriate details
+
+

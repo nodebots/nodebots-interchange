@@ -2,6 +2,8 @@
   "firmwares": [
     {
       "name": "node-pixel",
+      "creatorID": "0x05",
+      "deviceID": "0x01",
       "repo": "url",
       "npm": {
           "package": "node-pixel",
@@ -14,6 +16,8 @@
     },
     {
       "name": "hc-sr04",
+      "creatorID": "0x05",
+      "deviceID": "0x01",
       "npm" : {
           "package": "nodebots-hcsr04",
           "repo": "git+https://github.com/ajfisher/nodebots-hcsr04",
@@ -22,10 +26,12 @@
       "description": "Allows an HC-SR04 ultrasonic sensor to be used with the Proximity class and the HC-SR04-I2C controller",
       "docs": "url",
       "firmata": true,
-      "address": "0x75"
+      "address": "0x27"
     },
     {
       "name": "StandardFirmata",
+      "creatorID": "0x01",
+      "deviceID": "0x01",
       "repo": "git+https://github.com/ajfisher/interchange-firmata",
       "description": "Installs standard firmata onto an arduino",
       "docs": "url",
