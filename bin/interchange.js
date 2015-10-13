@@ -27,7 +27,7 @@ function display_help() {
     
     var usage = "NodeBots Interchange - backpack utilities - Version: " + version + "\n\n" +
                 "usage: interchange install [firmware] [arguments]\n" +
-                "   or: interchange install StandardFirmata [arguments]\n"
+                "   or: interchange install StandardFirmata [arguments]\n" +
                 "   or: interchange list\n" +
                 "   or: interchange --help\n" +
                 "\n" +
@@ -223,7 +223,7 @@ function check_firmware(firmware, options, cb) {
 
 if (argv.h || argv.help) {
     display_help();
-    process.exit(1);
+    process.exit(0);
 }
 
 if (argv.v || argv.version) {

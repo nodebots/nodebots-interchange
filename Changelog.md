@@ -49,6 +49,11 @@ made it command line only at this point.
 * Defined manifest requirements for compliant firmware
 * Updated dev documentation to reflect this.
 
+### 0.0.3
+
+* brought in AVRGirl by the wonderful [@noopkat](http://github.com/noopkat) and
+built a scaffold to test a single build with.
+
 ### 0.0.2
 
 * Definition of structure of how to build a compatible interchange system.
