@@ -62,12 +62,12 @@ A firmware configuration must implement the following configuration options:
 
 | Command | Parameters | Action | Notes |
 |---------|----------------------------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| H | none | Help | Provides any help information relating to the firmware and config mode |
-| D | none | Dump settings | Prints out all of the current settings that the firmware has configured, providing at a minimum the I2C address, the version of the firmware, the firmware and creator IDs and whether a custom address is in use. |
-| I | address (byte) custom flag (bit) | Set address | Sets the I2C address of this device. eg: `I 0x56 1` sets the I2C address to 0x56 with custom flag set to True |
-| F | ID (byte) | Set Firmware ID | Sets the firmware ID of this device |
-| C | ID (byte) | Set creator ID | Sets the creator ID of this device |
-|  |  |  |  |
+| HELP | [CMD] | Help | Provides any help information relating to the firmware and config mode. Optional command will provide detail for that instruction |
+| DUMP | none | Dump settings | Prints out all of the current settings that the firmware has configured, providing at a minimum the I2C address, the version of the firmware, the firmware and creator IDs and whether a custom address is in use. |
+| I2C | address (byte) custom flag (bit) | Set address | Sets the I2C address of this device. eg: `I 0x56 1` sets the I2C address to 0x56 with custom flag set to True |
+| FID | ID (byte) | Set Firmware ID | Sets the firmware ID of this device |
+| CID | ID (byte) | Set creator ID | Sets the creator ID of this device |
+| CLR |  | Clears EEPROM  | Clears all of the interchange eeprom registers back to default |
 
 
 ### Johnny Five
