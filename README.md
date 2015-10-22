@@ -1,8 +1,24 @@
 # nodebots-interchange
 
-[![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![](https://img.shields.io/badge/status-Not%20Ready-red.svg)
+![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
 
-Providing a mechanism to use custom backpacks for your nodebots.
+Provides a mechanism to use custom backpacks and firmatas in your nodebots easily 
+and without needing to use arduino or compile firmwares and all their dependencies.
+
+Want to use a ping sensor on your nodebot or play around with neopixels? Plug in
+your arduino or backpack, install the relevant firmware with interchange and 
+start building that nodebot.
+
+It's as easy as:
+
+```
+interchange install hc-sr04 -a nano -p /dev/tty.wchserial1410
+```
+
+No need to install arduino, no need to find the right firmware - interchange is
+like npm for your backpacks.
 
 ## Overview
 
@@ -14,13 +30,17 @@ to firmata created numerous problems, not just with the bloat that it would
 cause in firmata but additionally the support requirements it would impose on 
 other IO Plugins as any custom instructions would then need to be supported as well.
 
-The end the solution was to instead create a custom NodeBots "board", in the
+The end solution was to instead create a custom NodeBots "board", in the
 style of a "BackPack" (as used by AdaFruit & others in the hardware space) that
 would act as a bridge between "dumb" devices such as ultrasonic sensors,
 neopixels and touch screens that would then expose these components as I2C 
 devices. In this way, any nodebots capable board that can talk I2C (just about
 all of them) would be able to work with these components, not just those running
 firmata.
+
+As the project has developed, it was determined that being able to use it to 
+eliminate the need for Arduino for beginners was also useful and would use the
+same mechanism. 
 
 Interchange provides the following:
 
@@ -29,15 +49,14 @@ Interchange provides the following:
 backpack firmware selection and installation easy.
 * A method of updating select parts of the firmware if required.
 * An ability to install Standard or Custom Firmatas to an arduino.
+* An interface for retrieving information from a backpack firmware.
 
 ## Installation
 
-To install nodebots-interchange install from npm
-
-(CURRENTLY THIS DOESN'T WORK AS IT HASN'T BEEN PUBLISHED BUT THIS IS PREDICTED)
+To install nodebots-interchange install using npm
 
 ```
-npm install nodesbots-interchange
+npm install ajfisher/nodesbots-interchange
 ```
 
 Alternatively
