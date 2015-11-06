@@ -88,17 +88,30 @@ function get_firmware_info(port) {
     })
 }
 
-function set_firmware_details(port, opts) {
+function set_firmware_details(port, opts, cb) {
     // sets the firmware details for the specifics 
 
     ic_client.port = port;
 
-    ic_client.on("ready") {
+    console.log("Attempting to set details");
+
+    ic_client.on("error", function(err) {
+        console.error("Can't configure device. Did you remember to set your backpack into config mode?");
+        this.close();
+        if (cb) {
+            cb();
+        }
+    });
+    ic_client.on("ready", function() {
         console.log("setting the firmware details");
     // TODO
         console.log("Closing serialport");
         this.close();
-    }.bind(this));
+        if (cb) {
+            console.log("Cleaning up");
+            cb();
+        }
+    });
 }
 function flash_firmware(firmware, opts, cb) {
     // flashes the board with the options provided.
@@ -118,8 +131,7 @@ function flash_firmware(firmware, opts, cb) {
             process.exit(1);
         }
 
-        console.info("flashed");
-        cb();
+        set_firmware_details(port, opts, cb);
     });
 }
 
