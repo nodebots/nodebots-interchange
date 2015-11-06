@@ -10,8 +10,10 @@ var http    = require('http');
 var path    = require("path");
 var tmp     = require('tmp');
 
-var version = require('../package.json').version;
 var firmwares = require('../lib/firmwares.json').firmwares;
+var interchange_client = require('../lib/interchange_client');
+var ic_client = new interchange_client.Client();
+var version = require('../package.json').version;
 
 function clean_temp_dir(tmpdir) {
     // takes a temporary directory and cleans up any files within it and
@@ -29,6 +31,7 @@ function display_help() {
                 "usage: interchange install [firmware] [arguments]\n" +
                 "   or: interchange install StandardFirmata [arguments]\n" +
                 "   or: interchange list\n" +
+                "   or: interchange read -p [device path]\n" +
                 "   or: interchange --help\n" +
                 "\n" +
                 "Arguments:\n" +
@@ -56,6 +59,47 @@ function list_devices() {
     });
 }
 
+function get_firmware_info(port) {
+    // attempts to connect to an interchange firmware and get the 
+    // installed details.
+
+    ic_client.port = port;
+
+    ic_client.on("connected", function() {
+        console.log("Connected to port: %s", this.port);
+    });
+    ic_client.on("error", function(err) {
+        console.error(err);
+        return err;
+    });
+    ic_client.on("ready", function() {
+        this.get_info(function(err, data) {
+            // json is returned
+            if (err) {
+                this.close();
+                throw err;
+            }
+
+            // TODO get this to lookup the data properly. 
+            console.log(data);
+            console.info("Closing serialport");
+            this.close();
+        }.bind(this));
+    })
+}
+
+function set_firmware_details(port, opts) {
+    // sets the firmware details for the specifics 
+
+    ic_client.port = port;
+
+    ic_client.on("ready") {
+        console.log("setting the firmware details");
+    // TODO
+        console.log("Closing serialport");
+        this.close();
+    }.bind(this));
+}
 function flash_firmware(firmware, opts, cb) {
     // flashes the board with the options provided.
 
@@ -196,13 +240,26 @@ function check_firmware(firmware, options, cb) {
     });
 
     if (fw == undefined) {
-        throw "No firmware found: " + firmware;
-    } else {
-        // we have a firmware - check if we need firmata 
-        if (useFirmata) {
-            if (! fw.firmata) {
-                throw "Firmware " + fw.name + "  doesn't support custom firmata"
-            }
+
+        if (firmware.indexOf('git+https') >= 0) {
+            // command has been passed with a git repo so make a temp object for
+            // fw with appropriate stuff in it.
+            fw = {
+              "name": firmware,
+              "deviceID": "0x01",
+              "repo": firmware,
+              "firmata": useFirmata
+            };
+
+        } else {
+            throw "No firmware found: " + firmware;
+        }
+    }
+
+    // we have a firmware - check if we need firmata 
+    if (useFirmata) {
+        if (! fw.firmata) {
+            throw "Firmware " + fw.name + "  doesn't support custom firmata"
         }
     }
 
@@ -260,4 +317,14 @@ if (argv._[0] == "list") {
         console.error(e);
         process.exit(1);
     }   
+} else if (argv._[0] == "read") {
+    
+    var port = argv.p || argv.port || undefined;
+
+    if (port == undefined) {
+        console.error("Please provide a device path");
+        process.exit(1);
+    }
+
+    get_firmware_info(port);
 }
