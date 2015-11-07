@@ -120,6 +120,14 @@ from the interchange directory (good for testing in development) on port
 interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata
 ```
 
+Read the details of a backpack firmware on /dev/tty.usbmodem1130 to see what 
+was on it.
+
+```
+interchange read -p /dev/tty.usbmodem1130
+```
+
+
 ## Building your own interchange package.
 
 If you want to build your own interchange package you can get more information
