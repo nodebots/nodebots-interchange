@@ -3,6 +3,7 @@ var _       = require('lodash');
 var argv    = require('minimist')(process.argv.slice(2));
 var Avrgirl = require('avrgirl-arduino');
 var child_process = require('child_process');
+var colors = require('colors');
 var Download= require('download');
 var fs      = require('fs');
 var fsextra = require('fs-extra');
@@ -14,6 +15,8 @@ var firmwares = require('../lib/firmwares.json').firmwares;
 var interchange_client = require('../lib/interchange_client');
 var ic_client = new interchange_client.Client();
 var version = require('../package.json').version;
+
+var fw = null; // used to hold details of the firmware we want in it.
 
 function clean_temp_dir(tmpdir) {
     // takes a temporary directory and cleans up any files within it and
@@ -93,24 +96,28 @@ function set_firmware_details(port, opts, cb) {
 
     ic_client.port = port;
 
-    console.log("Attempting to set details");
-
     ic_client.on("error", function(err) {
-        console.error("Can't configure device. Did you remember to set your backpack into config mode?");
+        console.error("Can't configure device. Did you remember to set your backpack into config mode?".red);
         this.close();
         if (cb) {
             cb();
         }
     });
     ic_client.on("ready", function() {
-        console.log("setting the firmware details");
-    // TODO
-        console.log("Closing serialport");
-        this.close();
-        if (cb) {
-            console.log("Cleaning up");
-            cb();
-        }
+  
+        //TODO DETERMINE if we need custom I2C value or not
+
+        this.set_details({
+            firmwareID: parseInt(fw.firmwareID, 16),
+            creatorID: parseInt(fw.creatorID, 16),
+        }, function() {
+
+            this.close();
+            if (cb) {
+                console.log("Cleaning up".green);
+                cb();
+            }
+        }.bind(this))
     });
 }
 function flash_firmware(firmware, opts, cb) {
@@ -138,7 +145,7 @@ function flash_firmware(firmware, opts, cb) {
 function download_from_npm(firmware, options, cb) {
     // downloads the firmware from the npm package
 
-    console.info("Installing " + firmware.name + " from npm");
+    console.info(colors.magenta("Installing " + firmware.name + " from npm"));
     // first try to install the npm package
     var command = "npm install ";
 
@@ -174,7 +181,6 @@ function download_from_npm(firmware, options, cb) {
         manifest_objects.hexPath = "/" + manifest_objects.hexPath;
     }
     var hex_path = path.join(base_path, manifest_objects.bins, options.boardtype, manifest_objects.hexPath);
-    console.log(hex_path);
 
     cb(hex_path);
 }
@@ -247,7 +253,7 @@ function check_firmware(firmware, options, cb) {
     var useFirmata = (firmware.indexOf('Firmata') > 0) || (options.firmata != null) || false;
 
     // see if the firmware is in the directory
-    var fw = _.find(firmwares, function(f) {
+    fw = _.find(firmwares, function(f) {
         return f.name == firmware;
     });
 
@@ -258,7 +264,8 @@ function check_firmware(firmware, options, cb) {
             // fw with appropriate stuff in it.
             fw = {
               "name": firmware,
-              "deviceID": "0x01",
+              "deviceID": 0x01,
+              "creatorID": 0x00,
               "repo": firmware,
               "firmata": useFirmata
             };
@@ -274,6 +281,8 @@ function check_firmware(firmware, options, cb) {
             throw "Firmware " + fw.name + "  doesn't support custom firmata"
         }
     }
+
+    
 
     var opts = {
         useFirmata: useFirmata,
@@ -322,8 +331,10 @@ if (argv._[0] == "list") {
 
             flash_firmware(hex_path, opts, function() {
                 // once complete destory the tmp_dir.
-                clean_temp_dir(tmp_dir);
-            });            
+                if (tmp_dir) {
+                    clean_temp_dir(tmp_dir);
+                }
+            }); 
         });
     } catch (e) {
         console.error(e);
