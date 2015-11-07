@@ -15,7 +15,13 @@ have builds and precompiled binaries for at minimum these boards.
 
 * Arduino Uno (called `uno`)
 * Arduino Nano (called `nano`)
-* Arduino ProMini (called `promini`)
+* Arduino ProMini (called `pro-mini`)
+
+Additional boards can also be supported (eg in the case of a Firmata) by using
+the same naming convention as is used in [avrgirl](https://github.com/noopkat/avrgirl-arduino#how-do-i-use-it)
+
+To keep your repos small, it's suggested that you use a clean up script in order
+to simply ship the hex file, not all the supporting compilation files.
 
 ## Environment set up
 
@@ -78,12 +84,16 @@ in Johnny-Five directly.
 
 ## Build of firmware
 
-* use Grunt to create files for build
+You can build your firmware any way you like, however here is a suggested
+process that you can use.
+
+* Use Grunt to create files for build
 * Use Arduino IDE to automate build of each type of firmware outputting HEX files.
 * Put compiled hex files into a folder (eg `/firmware/bins/`) with each of the hex files
 for the different supported boards in a separate directory per it's reference 
 name, for example: `/firmware/bins/uno/...` 
-
+* Clean any intermediate compilation files that are produced as artefacts of the
+compilation process, leaving just the hex file for shipping.
 
 ## Repo structure
 
