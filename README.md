@@ -1,8 +1,9 @@
 # nodebots-interchange
 
 [![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![](https://img.shields.io/badge/status-Alpha-red.svg)
 ![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
-![](https://img.shields.io/badge/status-Not%20Ready-red.svg)
+![](https://img.shields.io/github/issues/ajfisher/nodebots-interchange.svg)
 
 Provides a mechanism to use custom backpacks and firmatas in your nodebots easily 
 and without needing to use arduino or compile firmwares and all their dependencies.

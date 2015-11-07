@@ -123,11 +123,13 @@ function set_firmware_details(port, opts, cb) {
 function flash_firmware(firmware, opts, cb) {
     // flashes the board with the options provided.
 
-    var boardtype = opts.board || "nano"; // assumes nano if none provided
+    console.log(opts);
+    var board = opts.board || "nano"; // assumes nano if none provided
     var port = opts.port || ""; // will leave empty and sees what happens.
+    var usingFirmata = opts.useFirmata || false; // Assumes not unless explicit
 
     var avrgirl = new Avrgirl({
-        board: boardtype,
+        board: board,
         port: port,
         debug: true,
     });
@@ -138,7 +140,9 @@ function flash_firmware(firmware, opts, cb) {
             process.exit(1);
         }
 
-        set_firmware_details(port, opts, cb);
+        if (! usingFirmata) {
+            set_firmware_details(port, opts, cb);
+        }
     });
 }
 
@@ -180,9 +184,9 @@ function download_from_npm(firmware, options, cb) {
     if (manifest_objects.hexPath.indexOf("/") != 0) {
         manifest_objects.hexPath = "/" + manifest_objects.hexPath;
     }
-    var hex_path = path.join(base_path, manifest_objects.bins, options.boardtype, manifest_objects.hexPath);
+    var hex_path = path.join(base_path, manifest_objects.bins, options.board, manifest_objects.hexPath);
 
-    cb(hex_path);
+    cb(hex_path, null,  options);
 }
 
 
@@ -228,7 +232,7 @@ function download_from_github(firmware, options, cb) {
             if (manifest_objects.hexPath.indexOf("/") != 0) {
                 manifest_objects.hexPath = "/" + manifest_objects.hexPath;
             }
-            var hex_uri = base_uri + manifest_objects.bins + options.boardtype + 
+            var hex_uri = base_uri + manifest_objects.bins + options.board + 
                             manifest_objects.hexPath + "?" + (new Date().getTime());
 
             console.info("Downloading hex file")
@@ -240,7 +244,7 @@ function download_from_github(firmware, options, cb) {
                         clean_temp_dir(tmp_dir);
                         throw err;
                     }
-                    cb(hex_files[0].path, tmp_dir);
+                    cb(hex_files[0].path, tmp_dir, options);
                 });
         });
 }
@@ -249,7 +253,7 @@ function check_firmware(firmware, options, cb) {
     // checks if the firmware makes sense and downloads the hex file
     // to a temporary location
 
-    var boardtype = options.board || "nano"; // assumes nano if none provided
+    var board = options.board || "nano"; // assumes nano if none provided
     var useFirmata = (firmware.indexOf('Firmata') > 0) || (options.firmata != null) || false;
 
     // see if the firmware is in the directory
@@ -282,12 +286,10 @@ function check_firmware(firmware, options, cb) {
         }
     }
 
+    var opts = options || {};
     
-
-    var opts = {
-        useFirmata: useFirmata,
-        boardtype: boardtype,
-    };
+    opts["useFirmata"] = useFirmata;
+    
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {
         // use git repo
@@ -327,9 +329,9 @@ if (argv._[0] == "list") {
     };
 
     try {
-        check_firmware(argv._[1], opts, function(hex_path, tmp_dir) {
+        check_firmware(argv._[1], opts, function(hex_path, tmp_dir, options) {
 
-            flash_firmware(hex_path, opts, function() {
+            flash_firmware(hex_path, options, function() {
                 // once complete destory the tmp_dir.
                 if (tmp_dir) {
                     clean_temp_dir(tmp_dir);
