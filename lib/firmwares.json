@@ -1,4 +1,21 @@
 {
+  "creators": [
+      {
+          "id": "0x01",
+          "name": "Official Reserved",
+          "gh": ""
+      },
+      {
+          "id": "0x05",
+          "name": "Andrew Fisher",
+          "gh": "ajfisher"
+      },
+      {
+          "id": "0x09",
+          "name": "Rick Waldron",
+          "gh": "rwaldron"
+      }
+  ],
   "firmwares": [
     {
       "name": "node-pixel",

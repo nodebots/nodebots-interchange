@@ -11,6 +11,7 @@ var http    = require('http');
 var path    = require("path");
 var tmp     = require('tmp');
 
+var creators = require('../lib/firmwares.json').creators;
 var firmwares = require('../lib/firmwares.json').firmwares;
 var interchange_client = require('../lib/interchange_client');
 var ic_client = new interchange_client.Client();
@@ -46,19 +47,19 @@ function display_help() {
                 "  -v --version         Print version\n" +
                 "\n\n";
 
-    console.log(usage);
+    console.info(usage);
 }
 
 function list_devices() {
     // this function lists out all of the devices available to have firmware
     // installed.
 
-    console.log("\nFirmwares available for backpacks. (f) denotes a firmata version is available\n");
+    console.info("\nFirmwares available for backpacks. (f) denotes a firmata version is available\n");
     _.sortBy(firmwares, "name").forEach(function(firmware) {
         var outstr = "  " + firmware.name + 
             (firmware.firmata ? " (f)" : "") + ":  " +
             firmware.description;
-        console.log(outstr);
+        console.info(outstr);
     });
 }
 
@@ -68,9 +69,6 @@ function get_firmware_info(port) {
 
     ic_client.port = port;
 
-    ic_client.on("connected", function() {
-        console.log("Connected to port: %s", this.port);
-    });
     ic_client.on("error", function(err) {
         console.error(err);
         return err;
@@ -83,9 +81,23 @@ function get_firmware_info(port) {
                 throw err;
             }
 
-            // TODO get this to lookup the data properly. 
-            console.log(data);
-            console.info("Closing serialport");
+            // look up the details from the various resources
+            fw_details = _.find(firmwares, function(f) {
+                return ((parseInt(f.creatorID, 16) == data.creatorID) && 
+                        (parseInt(f.firmwareID, 16) == data.firmwareID));
+            });
+            var creator = _.find(creators, {id: fw_details.creatorID});
+
+            // print everything out.
+            console.info((fw_details.name + " backpack firmware").bold);
+            console.info("Version %s Built %s", data.fw_version, data.compile_date);
+            console.info("Creator ID: %s (%s @%s)", fw_details.creatorID, creator.name, creator.gh);
+            console.info("Device ID: %s (%s)", fw_details.firmwareID, fw_details.name);
+            console.info("I2C Address: 0x%s (%s)", data.i2c_address.toString(16), 
+                    data.use_custom_addr ? "Using custom" : "Using default");
+            console.info(fw_details.description);
+
+            // close it up.
             this.close();
         }.bind(this));
     })
@@ -104,17 +116,26 @@ function set_firmware_details(port, opts, cb) {
         }
     });
     ic_client.on("ready", function() {
-  
-        //TODO DETERMINE if we need custom I2C value or not
+ 
+        // use defaults and then check if we need otherwise
+        var address = parseInt(fw.address, 16);
+        var use_custom = 0;
+        if (opts.i2c_address != undefined && opts.i2c_address != 0) {
+            // override with the custom one.
+            address = opts.i2c_address;
+            use_custom = 1;
+        }
 
         this.set_details({
             firmwareID: parseInt(fw.firmwareID, 16),
             creatorID: parseInt(fw.creatorID, 16),
+            i2c_address: address,
+            use_custom_address: use_custom,
         }, function() {
 
             this.close();
             if (cb) {
-                console.log("Cleaning up. Installation complete.".green);
+                console.info("Cleaning up. Installation complete.".green);
                 cb();
             }
         }.bind(this))
@@ -325,6 +346,7 @@ if (argv._[0] == "list") {
         board: argv.a || argv.board || process.env.INTERCHANGE_BOARD || "nano",
         port: argv.p || argv.port || process.env.INTERCHANGE_PORT || "",
         firmata: argv.firmata || null,
+        i2c_address: argv.i || null,
     };
 
     try {

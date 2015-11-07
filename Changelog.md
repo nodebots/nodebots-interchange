@@ -3,7 +3,13 @@
 ## 0.2.0
 
 * Added ability to install from an npm package
-*
+* Added ability to install from git URL directly using git+https://path
+* Can now set backpack details directly without recompiling firmware. This happens
+automatically when a backpack is detected through configuration mode and the
+interchange client.
+* Can dump the details of a backpack that has been plugged in to show you
+what Interchange thinks is on it use `interchange read -p /device/path`
+* Added creator directory
 
 ### 0.1.4
 
