@@ -114,7 +114,7 @@ function set_firmware_details(port, opts, cb) {
 
             this.close();
             if (cb) {
-                console.log("Cleaning up".green);
+                console.log("Cleaning up. Installation complete.".green);
                 cb();
             }
         }.bind(this))
@@ -123,7 +123,6 @@ function set_firmware_details(port, opts, cb) {
 function flash_firmware(firmware, opts, cb) {
     // flashes the board with the options provided.
 
-    console.log(opts);
     var board = opts.board || "nano"; // assumes nano if none provided
     var port = opts.port || ""; // will leave empty and sees what happens.
     var usingFirmata = opts.useFirmata || false; // Assumes not unless explicit
@@ -193,7 +192,7 @@ function download_from_npm(firmware, options, cb) {
 function download_from_github(firmware, options, cb) {
     // downloads the firmware from the GH repo
 
-    console.info("GH repo - retrieving manifest data");
+    console.info("Retrieving manifest data from GitHub".magenta);
     var manifest_uri = null;
     var base_uri = null;
     if (firmware.repo.indexOf('git+https') == 0) {
