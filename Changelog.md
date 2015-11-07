@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+### 0.2.1
+
+* Added documentation for the usage examples.
+
 ## 0.2.0
 
 * Added ability to install from an npm package

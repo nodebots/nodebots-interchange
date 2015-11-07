@@ -70,16 +70,54 @@ As a convenience, if you would like to install StandardFirmata you can do so by:
 interchange install StandardFirmata -a <board> -p <port>
 ```
 
-Available firmware and their descriptions can be found by running:
+### Usage examples
+
+Get help:
+
+```
+interchange --help
+```
+
+List the firmwares available and get details about them, including whether they
+are firmata capable or not.
 
 ```
 interchange list
 ```
 
-Get help using:
+Install the HC-SR04 backpack firmware to an arduino nano on port /dev/tty.wchserial1410.
+(Ensure configuration mode is set on the arduino)
 
 ```
-interchange --help
+interchange install hc-sr04 -a nano -p /dev/tty.wchserial1410
+```
+
+Install the HC-SR04 backpack firmware to an arduino nano on port /dev/tty.wchserial1410
+however change the default I2C address to 0x65 instead. (Ensure configuration 
+mode on the arduino is set).
+
+```
+interchange install hc-sr04 -a nano -p /dev/tty.wchserial1410 -i 0x65
+```
+
+Install StandardFirmata on an arduino Uno at port /dev/tty.usbmodem1230
+
+``` 
+interchange install StandardFirmata -a uno -p /dev/tty.usbmodem1230
+```
+
+Install the HC-SR04 custom firmata on an arduino Uno at port /dev/tty.usbmodem1230
+
+```
+interchange install hc-sr04 -a uno -p /dev/tty.usbmodem1230 --firmata
+```
+
+Install the custom mbot firmata onto an arduino from a git repository and not
+from the interchange directory (good for testing in development) on port
+/dev/tty.wchserial1560
+
+```
+interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata
 ```
 
 ## Building your own interchange package.
