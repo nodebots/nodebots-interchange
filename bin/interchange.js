@@ -36,7 +36,7 @@ function display_help() {
                 "usage: interchange install [firmware] [arguments]\n" +
                 "   or: interchange install StandardFirmata [arguments]\n" +
                 "   or: interchange list\n" +
-                "   or: interchange ports\n" +
+                "   or: interchange ports [--verbose]\n" +
                 "   or: interchange read -p [device path]\n" +
                 "   or: interchange --help\n" +
                 "\n" +

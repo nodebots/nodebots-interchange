@@ -1,5 +1,6 @@
 # nodebots-interchange
 
+![](https://img.shields.io/badge/version-0.3.0-blue.svg)
 [![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![](https://img.shields.io/badge/status-Beta-orange.svg)
 ![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
@@ -32,21 +33,36 @@ backpack firmware selection and installation easy.
 
 ## Installation
 
-To install nodebots-interchange install using npm
+It is recommended to install nodebots-interchange locally so different versions
+can coexist as part of projects. If you do this, make sure the node modules 
+.bin directory is on your path, like this:
+
+```
+export PATH=./node_modules/.bin:$PATH
+```
+
+After that just install locally using npm 
 
 ```
 npm install ajfisher/nodesbots-interchange
 ```
 
-Alternatively
+Or alternatively
 
 ```
 git clone https://github.com/ajfisher/nodebots-interchange.git
 npm install
 ```
 
+If you'd prefer to have interchange available to all users globally then do this:
+
+```
+npm install -g ajfisher/nodebots-interchange
+```
+
 Once installed you will have access to the `interchange` application which will allow
-you to flash your board with a firmware of choice.
+you to flash your board with a firmware of choice as described in the usage
+section below.
 
 ## Usage
 
@@ -83,6 +99,13 @@ are firmata capable or not.
 
 ```
 interchange list
+```
+
+Get a list of all the available serial devices you can see (use the --verbose 
+switch if you want to get much more detail about the devices.
+
+```
+interchange ports [--verbose]
 ```
 
 Install the HC-SR04 backpack firmware to an arduino nano on port /dev/tty.wchserial1410.
