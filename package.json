@@ -1,6 +1,6 @@
 {
   "name": "nodebots-interchange",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Tool to build custom backpack firmwares to make devices I2C compliant",
   "directories": {
     "doc": "docs",
@@ -21,8 +21,8 @@
   ],
   "author": "Andrew Fisher <ajfisher.td@gmail.com> (http://github.com/ajfisher)",
   "contributors": [
-      "Suz Hinton (http://github.com/noopkat)",
-      "Derek Wheelden (http://github.com/frxnz)"
+    "Suz Hinton (http://github.com/noopkat)",
+    "Derek Wheelden (http://github.com/frxnz)"
   ],
   "license": "MIT",
   "bugs": {
