@@ -77,6 +77,11 @@ Where `<firmware>` is the name of the firmware you would like to flash to the bo
 specific type of board you would like to use and `<I2C_address>` is an optional
 parameter allowing you to change the default address of the I2C device.
 
+_Note:_ If you do not supply a port and you have multiple boards plugged in
+it's unknown which of them will get flashed and configured. Best to be specific
+or only do this while there's one board plugged in. To use avrgirl's @noopkat phrase
+"without a port, Arduino Roulette will occur".
+
 Using the `--firmata` switch will attempt to download and install a custom firmata
 instead if this is available.
 

@@ -1,5 +1,15 @@
 # Interchange Changelog
 
+## 0.3.0
+
+* Added ability to list the ports available on the machine + docs
+* Added Frxnz as a contributor - thanks for the PR!
+* Added Noopkat as contributor - avrgirl has provided a heap of heavy lifting
+and she has made mods to help interchange too as well as very sage advice.
+* Modifications to docs to provide instructions to install globally.
+* Updated docs to ensure understanding of port usage
+* Patches to use the same port avrgirl discovers for flashing if none supplied.
+
 ### 0.2.1
 
 * Added documentation for the usage examples.

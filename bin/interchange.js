@@ -182,10 +182,14 @@ function flash_firmware(firmware, opts, cb) {
             process.exit(1);
         }
 
+        if (port == "") {
+            port = avrgirl.options.port;
+        }
+
         if (! usingFirmata) {
             set_firmware_details(port, opts, cb);
         }
-    });
+    }.bind(this));
 }
 
 function download_from_npm(firmware, options, cb) {

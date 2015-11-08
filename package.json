@@ -20,7 +20,10 @@
     "firmware"
   ],
   "author": "Andrew Fisher <ajfisher.td@gmail.com> (http://github.com/ajfisher)",
-  "contributors": "Derek Wheelden (http://github.com/frxnz)",
+  "contributors": [
+      "Suz Hinton (http://github.com/noopkat)",
+      "Derek Wheelden (http://github.com/frxnz)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ajfisher/nodebots-interchange/issues"
