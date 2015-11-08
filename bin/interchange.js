@@ -2,6 +2,7 @@
 var _       = require('lodash');
 var argv    = require('minimist')(process.argv.slice(2));
 var Avrgirl = require('avrgirl-arduino');
+var Serialport = require('serialport');
 var child_process = require('child_process');
 var colors = require('colors');
 var Download= require('download');
@@ -30,11 +31,12 @@ function clean_temp_dir(tmpdir) {
 
 function display_help() {
     // this function displays the help on this script.
-    
+
     var usage = "NodeBots Interchange - backpack utilities - Version: " + version + "\n\n" +
                 "usage: interchange install [firmware] [arguments]\n" +
                 "   or: interchange install StandardFirmata [arguments]\n" +
                 "   or: interchange list\n" +
+                "   or: interchange ports\n" +
                 "   or: interchange read -p [device path]\n" +
                 "   or: interchange --help\n" +
                 "\n" +
@@ -56,15 +58,35 @@ function list_devices() {
 
     console.info("\nFirmwares available for backpacks. (f) denotes a firmata version is available\n");
     _.sortBy(firmwares, "name").forEach(function(firmware) {
-        var outstr = "  " + firmware.name + 
+        var outstr = "  " + firmware.name +
             (firmware.firmata ? " (f)" : "") + ":  " +
             firmware.description;
         console.info(outstr);
     });
 }
 
+function list_ports(verbose) {
+    // this function lists out all the ports available to flash firmware
+
+    Serialport.list(function (err, ports) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        if (verbose) {
+            console.log(ports);
+        } else {
+            ports.forEach(function (port) {
+                console.log(port.comName.cyan);
+                console.log(port.manufacturer);
+            });
+        }
+    });
+}
+
 function get_firmware_info(port) {
-    // attempts to connect to an interchange firmware and get the 
+    // attempts to connect to an interchange firmware and get the
     // installed details.
 
     ic_client.port = port;
@@ -83,7 +105,7 @@ function get_firmware_info(port) {
 
             // look up the details from the various resources
             fw_details = _.find(firmwares, function(f) {
-                return ((parseInt(f.creatorID, 16) == data.creatorID) && 
+                return ((parseInt(f.creatorID, 16) == data.creatorID) &&
                         (parseInt(f.firmwareID, 16) == data.firmwareID));
             });
             var creator = _.find(creators, {id: fw_details.creatorID});
@@ -93,7 +115,7 @@ function get_firmware_info(port) {
             console.info("Version %s Built %s", data.fw_version, data.compile_date);
             console.info("Creator ID: %s (%s @%s)", fw_details.creatorID, creator.name, creator.gh);
             console.info("Device ID: %s (%s)", fw_details.firmwareID, fw_details.name);
-            console.info("I2C Address: 0x%s (%s)", data.i2c_address.toString(16), 
+            console.info("I2C Address: 0x%s (%s)", data.i2c_address.toString(16),
                     data.use_custom_addr ? "Using custom" : "Using default");
             console.info(fw_details.description);
 
@@ -104,7 +126,7 @@ function get_firmware_info(port) {
 }
 
 function set_firmware_details(port, opts, cb) {
-    // sets the firmware details for the specifics 
+    // sets the firmware details for the specifics
 
     ic_client.port = port;
 
@@ -116,7 +138,7 @@ function set_firmware_details(port, opts, cb) {
         }
     });
     ic_client.on("ready", function() {
- 
+
         // use defaults and then check if we need otherwise
         var address = parseInt(fw.address, 16);
         var use_custom = 0;
@@ -177,7 +199,7 @@ function download_from_npm(firmware, options, cb) {
     if (firmware.npm.repo !== undefined) {
         command = command + firmware.npm.repo;
     } else {
-        command = command + firmware.npm.package + 
+        command = command + firmware.npm.package +
             (firmware.npm.version !== "" ? "@" + firmware.npm.version : "");
     }
 
@@ -188,7 +210,7 @@ function download_from_npm(firmware, options, cb) {
         console.error(e);
         throw "npm couldn't complete";
     }
-    
+
     // as we have installed get the manifest file.
     var base_path = path.join(".", "node_modules", firmware.npm.package)
     var manifest_file = path.join(base_path, "manifest.json");
@@ -219,7 +241,7 @@ function download_from_github(firmware, options, cb) {
     if (firmware.repo.indexOf('git+https') == 0) {
         base_uri = "https://raw.githubusercontent.com" + firmware.repo.substring(22) + "/master";
         manifest_uri = base_uri + "/manifest.json?" + (new Date().getTime());
-    } 
+    }
 
     if (manifest_uri == null) {
         throw "Can't find manifest of " + firmware;
@@ -245,14 +267,14 @@ function download_from_github(firmware, options, cb) {
                 throw "Manifest file error"
             }
 
-            // now we need to download the hex file. 
+            // now we need to download the hex file.
 
             var manifest_objects = (options.useFirmata ? manifest.firmata : manifest.backpack);
 
             if (manifest_objects.hexPath.indexOf("/") != 0) {
                 manifest_objects.hexPath = "/" + manifest_objects.hexPath;
             }
-            var hex_uri = base_uri + manifest_objects.bins + options.board + 
+            var hex_uri = base_uri + manifest_objects.bins + options.board +
                             manifest_objects.hexPath + "?" + (new Date().getTime());
 
             console.info("Downloading hex file")
@@ -299,7 +321,7 @@ function check_firmware(firmware, options, cb) {
         }
     }
 
-    // we have a firmware - check if we need firmata 
+    // we have a firmware - check if we need firmata
     if (useFirmata) {
         if (! fw.firmata) {
             throw "Firmware " + fw.name + "  doesn't support custom firmata"
@@ -307,9 +329,9 @@ function check_firmware(firmware, options, cb) {
     }
 
     var opts = options || {};
-    
+
     opts["useFirmata"] = useFirmata;
-    
+
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {
         // use git repo
@@ -317,7 +339,7 @@ function check_firmware(firmware, options, cb) {
 
     } else {
         // get from npm now
-        download_from_npm(fw, opts, cb);   
+        download_from_npm(fw, opts, cb);
     }
 }
 
@@ -334,6 +356,10 @@ if (argv.v || argv.version) {
 if (argv._[0] == "list") {
     list_devices();
     process.exit(0);
+
+} else if (argv._[0] == "ports") {
+
+    list_ports(argv.verbose);
 
 } else if (argv._[0] == "install") {
 
@@ -357,14 +383,14 @@ if (argv._[0] == "list") {
                 if (tmp_dir) {
                     clean_temp_dir(tmp_dir);
                 }
-            }); 
+            });
         });
     } catch (e) {
         console.error(e);
         process.exit(1);
-    }   
+    }
 } else if (argv._[0] == "read") {
-    
+
     var port = argv.p || argv.port || undefined;
 
     if (port == undefined) {
