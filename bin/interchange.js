@@ -75,11 +75,11 @@ function list_ports(verbose) {
         }
 
         if (verbose) {
-            console.log(ports);
+            console.info(ports);
         } else {
             ports.forEach(function (port) {
-                console.log(port.comName.cyan);
-                console.log(port.manufacturer);
+                console.info(port.comName.cyan);
+                console.info(port.manufacturer);
             });
         }
     });
@@ -226,6 +226,14 @@ function download_from_npm(firmware, options, cb) {
     }
 
     var manifest_objects = (options.useFirmata ? manifest.firmata : manifest.backpack);
+    // this deals with a firmata object supplied that isn't the default
+    // one in order to grab the right hex file.
+    if (options.useFirmata && options.firmataName != "") {
+        manifest_objects = manifest.firmata[options.firmataName];
+    } else if (options.useFirmata && options.firmataName == "" && manifest.firmata.multi != undefined) {
+        // we have multiple firmatas and none have been supplied.
+        throw ("Multiple firmatas are available, please supply a name");
+    }
 
     if (manifest_objects.hexPath.indexOf("/") != 0) {
         manifest_objects.hexPath = "/" + manifest_objects.hexPath;
@@ -275,6 +283,20 @@ function download_from_github(firmware, options, cb) {
 
             var manifest_objects = (options.useFirmata ? manifest.firmata : manifest.backpack);
 
+            // this deals with a firmata object supplied that isn't the default
+            // one in order to grab the right hex file.
+            if (options.useFirmata && options.firmataName != "") {
+                manifest_objects = manifest.firmata[options.firmataName];
+            } else if (options.useFirmata && options.firmataName == "" && manifest.firmata.multi != undefined) {
+                // we have multiple firmatas and none have been supplied.
+                throw ("Multiple firmatas are available, please supply a name");
+            }
+
+            if (manifest_objects.hexPath == undefined) {
+                console.error(manifest_objects);
+                throw "Hex Path can't be found";
+            }
+
             if (manifest_objects.hexPath.indexOf("/") != 0) {
                 manifest_objects.hexPath = "/" + manifest_objects.hexPath;
             }
@@ -301,6 +323,12 @@ function check_firmware(firmware, options, cb) {
 
     var board = options.board || "nano"; // assumes nano if none provided
     var useFirmata = (firmware.indexOf('Firmata') > 0) || (options.firmata != null) || false;
+    var firmataName = options.firmata || "";
+    // check for default where no firmata name is supplied or default is implied.
+    if (firmataName === true) {
+        // set it to empty string
+        firmataName = "";
+    }
 
     // see if the firmware is in the directory
     fw = _.find(firmwares, function(f) {
@@ -335,6 +363,7 @@ function check_firmware(firmware, options, cb) {
     var opts = options || {};
 
     opts["useFirmata"] = useFirmata;
+    opts["firmataName"] = firmataName;
 
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {

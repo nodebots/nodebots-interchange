@@ -121,6 +121,26 @@ Current manifest file requirements
 }
 ```
 
+Optionally, in the case where you have multiple firmatas available you can
+provide a directive to indicate that that is the case and then list the various
+firmata as objects, each with their own `bins` and `hexPath` values. For example:
+
+```javascript
+{
+    "firmata": {
+        "multi": true,
+        "usb": {
+            "bins": "/firmware/bins/usb/",
+            "hexPath": "/firmware_usb.hex"
+        },
+        "bluetooth": {
+            "bins": "/firmware/bins/bluetooth/",
+            "hexPath": "/firmware_bluetooth.hex"
+        }
+    }
+}
+```
+
 ## Publishing to Interchange
 
 Add a reference to the /lib/firmwares.json file with appropriate details

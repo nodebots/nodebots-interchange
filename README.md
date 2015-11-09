@@ -1,6 +1,6 @@
 # nodebots-interchange
 
-![](https://img.shields.io/badge/version-0.3.0-blue.svg)
+![](https://img.shields.io/badge/version-0.4.0-blue.svg)
 [![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![](https://img.shields.io/badge/status-Beta-orange.svg)
 ![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
@@ -140,16 +140,24 @@ Install the HC-SR04 custom firmata on an arduino Uno at port /dev/tty.usbmodem12
 interchange install hc-sr04 -a uno -p /dev/tty.usbmodem1230 --firmata
 ```
 
-Install the custom mbot firmata onto an arduino from a git repository and not
-from the interchange directory (good for testing in development) on port
+Install a custom firmata (in this case for the mbot) onto an arduino from a git 
+repository and not from the interchange directory (good for testing in development) on port
 /dev/tty.wchserial1560
 
 ```
 interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata
 ```
 
+Install a named custom firmata (in this case the mbot Bluetooth firmata) onto
+an arduino from git repo on port /dev/tty.wchserial1560 - note the use of 
+`--firmata=[name]` here.
+
+```
+interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata=bluetooth
+```
+
 Read the details of a backpack firmware on /dev/tty.usbmodem1130 to see what 
-was on it.
+is on it.
 
 ```
 interchange read -p /dev/tty.usbmodem1130

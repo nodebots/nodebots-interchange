@@ -1,5 +1,11 @@
 # Interchange Changelog
 
+## 0.4.0
+
+* Modified firmata behaviour to allow named firmatas to be installed if one
+is supplied using `--firmata=<name>`. No named supply will attempt to install a
+default if one exists. 
+
 ## 0.3.0
 
 * Added ability to list the ports available on the machine + docs
