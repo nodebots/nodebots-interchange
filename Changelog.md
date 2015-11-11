@@ -1,10 +1,20 @@
 # Interchange Changelog
 
+## 0.5.0
+
+* Refactor of the minimist CLI interface to use commander and better help system.
+Thanks to Frxnz for the refactor.
+
+
+### 0.4.1
+
+* Updated outdated packages including avrgirl with upstream mods
+
 ## 0.4.0
 
 * Modified firmata behaviour to allow named firmatas to be installed if one
 is supplied using `--firmata=<name>`. No named supply will attempt to install a
-default if one exists. 
+default if one exists.
 
 ## 0.3.0
 
@@ -35,7 +45,7 @@ what Interchange thinks is on it use `interchange read -p /device/path`
 
 * Added capability to load standard firmata directly with `install StandardFirmata`
 * updated docs, fixed paths for the manifest file
-* Updated hex and manifest download to put a timestamp on end of the request 
+* Updated hex and manifest download to put a timestamp on end of the request
 because github raw has a very long cache.
 
 ### 0.1.3
@@ -47,18 +57,18 @@ files for flashing to the board.
 
 * Fixed manifest bug that was present from error checking
 * Migrated to new manifest style
-* Included ability to use `--firmata` to indicate installation of custom firmata 
+* Included ability to use `--firmata` to indicate installation of custom firmata
 if it is available.
 * updates to readme to bring back in line
 * changed npm structure in devices to reflect installation using npm versions
 correctly.
-* refactored to be firmware_list not devices so it makes more sense. 
+* refactored to be firmware_list not devices so it makes more sense.
 
 ### 0.1.1
 
 * Removed some dependencies and rationalised that to Download
 * Put better error handling on download steps
-* Added facility to clean up the temp directory after being finished within it 
+* Added facility to clean up the temp directory after being finished within it
 so as not to litter peep's filesystem
 
 ## 0.1.0
