@@ -33,7 +33,7 @@ program.command("read")
     });
 
 program.command("install [firmware]")
-    .description("Test")
+    .description("Install specified firmware to board")
     .alias("i")
     .option("-a, --board <board>", "Type of board/AVR")
     .option("-p, --port <port>", "Serial port board is attached to")
