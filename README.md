@@ -6,11 +6,11 @@
 ![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
 ![](https://img.shields.io/github/issues/ajfisher/nodebots-interchange.svg)
 
-Provides a mechanism to use custom backpacks and firmatas in your nodebots easily 
+Provides a mechanism to use custom backpacks and firmatas in your nodebots easily
 and without needing to use arduino or compile firmwares and all their dependencies.
 
 Want to use a ping sensor on your nodebot or play around with neopixels? Plug in
-your arduino or backpack, install the relevant firmware with interchange and 
+your arduino or backpack, install the relevant firmware with interchange and
 start building that nodebot.
 
 It's as easy as:
@@ -25,7 +25,7 @@ like npm for your backpacks.
 Interchange provides the following:
 
 * A specification for how backpack devices should behave
-* An installation method for backpack firmware onto target boards to make 
+* An installation method for backpack firmware onto target boards to make
 backpack firmware selection and installation easy.
 * A method of updating select parts of the firmware if required without recompilation.
 * An ability to install Standard or Custom Firmatas to a board.
@@ -34,17 +34,17 @@ backpack firmware selection and installation easy.
 ## Installation
 
 It is recommended to install nodebots-interchange locally so different versions
-can coexist as part of projects. If you do this, make sure the node modules 
+can coexist as part of projects. If you do this, make sure the node modules
 .bin directory is on your path, like this:
 
 ```
 export PATH=./node_modules/.bin:$PATH
 ```
 
-After that just install locally using npm 
+After that just install locally using npm
 
 ```
-npm install ajfisher/nodesbots-interchange
+npm install ajfisher/nodebots-interchange
 ```
 
 Or alternatively
@@ -69,11 +69,11 @@ section below.
 In general:
 
 ```
-interchange install <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata]
+interchange install <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata [name]]
 ```
 
 Where `<firmware>` is the name of the firmware you would like to flash to the board,
-`<port>` is the name of the serial port you want to use, `<board_type>` is the 
+`<port>` is the name of the serial port you want to use, `<board_type>` is the
 specific type of board you would like to use and `<I2C_address>` is an optional
 parameter allowing you to change the default address of the I2C device.
 
@@ -106,7 +106,7 @@ are firmata capable or not.
 interchange list
 ```
 
-Get a list of all the available serial devices you can see (use the --verbose 
+Get a list of all the available serial devices you can see (use the --verbose
 switch if you want to get much more detail about the devices.
 
 ```
@@ -121,7 +121,7 @@ interchange install hc-sr04 -a nano -p /dev/tty.wchserial1410
 ```
 
 Install the HC-SR04 backpack firmware to an arduino nano on port /dev/tty.wchserial1410
-however change the default I2C address to 0x65 instead. (Ensure configuration 
+however change the default I2C address to 0x65 instead. (Ensure configuration
 mode on the arduino is set).
 
 ```
@@ -130,7 +130,7 @@ interchange install hc-sr04 -a nano -p /dev/tty.wchserial1410 -i 0x65
 
 Install StandardFirmata on an arduino Uno at port /dev/tty.usbmodem1230
 
-``` 
+```
 interchange install StandardFirmata -a uno -p /dev/tty.usbmodem1230
 ```
 
@@ -140,7 +140,7 @@ Install the HC-SR04 custom firmata on an arduino Uno at port /dev/tty.usbmodem12
 interchange install hc-sr04 -a uno -p /dev/tty.usbmodem1230 --firmata
 ```
 
-Install a custom firmata (in this case for the mbot) onto an arduino from a git 
+Install a custom firmata (in this case for the mbot) onto an arduino from a git
 repository and not from the interchange directory (good for testing in development) on port
 /dev/tty.wchserial1560
 
@@ -149,14 +149,14 @@ interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /
 ```
 
 Install a named custom firmata (in this case the mbot Bluetooth firmata) onto
-an arduino from git repo on port /dev/tty.wchserial1560 - note the use of 
-`--firmata=[name]` here.
+an arduino from git repo on port /dev/tty.wchserial1560 - note the use of
+`--firmata [name]` here.
 
 ```
-interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata=bluetooth
+interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata bluetooth
 ```
 
-Read the details of a backpack firmware on /dev/tty.usbmodem1130 to see what 
+Read the details of a backpack firmware on /dev/tty.usbmodem1130 to see what
 is on it.
 
 ```
@@ -179,29 +179,29 @@ Additional documentation: https://docs.google.com/document/d/1j6Jce2MUSA-V-I9iO6
 # Acknowledgements
 
 Interchange was born of an idea that came out of RobotsConf 2014 that started
-with a discussion about how to incorporate NeoPixel support into 
-[Firmata](https://github.com/firmata/arduino) and 
+with a discussion about how to incorporate NeoPixel support into
+[Firmata](https://github.com/firmata/arduino) and
 [Johnny-Five](https://github.com/rwaldron/johnny-five). Adding custom additions
 to firmata created numerous problems, not just with the bloat that it would
-cause in firmata but additionally the support requirements it would impose on 
+cause in firmata but additionally the support requirements it would impose on
 other IO Plugins as any custom instructions would then need to be supported as well.
 
 The end solution was to instead create a custom NodeBots "board", in the
 style of a "BackPack" (as used by AdaFruit & others in the hardware space) that
 would act as a bridge between "dumb" devices such as ultrasonic sensors,
-neopixels and touch screens that would then expose these components as I2C 
+neopixels and touch screens that would then expose these components as I2C
 devices. In this way, any nodebots capable board that can talk I2C (just about
 all of them) would be able to work with these components, not just those running
 firmata.
 
-As the project has developed, it was determined that being able to use it to 
+As the project has developed, it was determined that being able to use it to
 eliminate the need for Arduino for beginners was also useful and would use the
-same mechanism. 
+same mechanism.
 
 This project would not have seen light were it not for the following people:
 
 * Rick Waldron - believing this was a good approach and supporting the exploration
 of the idea to augment Johnny Five.
-* Suz Hinton - for the excellent avrgirl which provided considerable heavy lifting on the 
+* Suz Hinton - for the excellent avrgirl which provided considerable heavy lifting on the
 flashing side of things.
 * Andy Gelme, Luis Montes - for pushing me on backpacks and keep me moving.
