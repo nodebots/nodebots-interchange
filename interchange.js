@@ -223,8 +223,6 @@ Interchange.prototype.download_from_npm = function (firmware, options, cb) {
         manifest_objects.hexPath = "/" + manifest_objects.hexPath;
     }
 
-    console.log(base_path, manifest_objects.bins, options.board, manifest_objects.hexPath);
-
     var hex_path = path.join(base_path, manifest_objects.bins, options.board, manifest_objects.hexPath);
 
     cb(hex_path, null,  options);
