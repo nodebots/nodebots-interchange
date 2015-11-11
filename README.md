@@ -1,6 +1,6 @@
 # nodebots-interchange
 
-![](https://img.shields.io/badge/version-0.5.0-blue.svg)
+![](https://img.shields.io/badge/version-1.0.0--alpha-blue.svg)
 [![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![](https://img.shields.io/badge/status-RC-orange.svg)
 ![](https://img.shields.io/david/ajfisher/nodebots-interchange.svg)
