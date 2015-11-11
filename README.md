@@ -69,7 +69,7 @@ section below.
 In general:
 
 ```
-interchange install <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata [firmata]]
+interchange install <firmware> -p <port> -a <board_type> -i <I2C_address> [--firmata [name]]
 ```
 
 Where `<firmware>` is the name of the firmware you would like to flash to the board,
