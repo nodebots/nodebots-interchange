@@ -1,6 +1,5 @@
-#! /usr/bin/env node
 var _       = require('lodash');
-var argv    = require('minimist')(process.argv.slice(2));
+var program = require('commander');
 var Avrgirl = require('avrgirl-arduino');
 var Serialport = require('serialport');
 var child_process = require('child_process');
@@ -12,47 +11,28 @@ var http    = require('http');
 var path    = require("path");
 var tmp     = require('tmp');
 
-var creators = require('../lib/firmwares.json').creators;
-var firmwares = require('../lib/firmwares.json').firmwares;
-var interchange_client = require('../lib/interchange_client');
+var creators = require('./lib/firmwares.json').creators;
+var firmwares = require('./lib/firmwares.json').firmwares;
+var interchange_client = require('./lib/interchange_client');
 var ic_client = new interchange_client.Client();
-var version = require('../package.json').version;
+var version = require('./package.json').version;
 
 var fw = null; // used to hold details of the firmware we want in it.
 
-function clean_temp_dir(tmpdir) {
+var Interchange = function () {
+
+};
+
+Interchange.prototype.clean_temp_dir = function (tmpdir) {
     // takes a temporary directory and cleans up any files within it and
     // then calls the callback to remove itself.
     if (tmpdir != undefined && tmpdir !== null && tmpdir !== "") {
         fsextra.emptyDirSync(tmpdir.name);
         tmpdir.removeCallback();
     }
-}
+};
 
-function display_help() {
-    // this function displays the help on this script.
-
-    var usage = "NodeBots Interchange - backpack utilities - Version: " + version + "\n\n" +
-                "usage: interchange install [firmware] [arguments]\n" +
-                "   or: interchange install StandardFirmata [arguments]\n" +
-                "   or: interchange list\n" +
-                "   or: interchange ports [--verbose]\n" +
-                "   or: interchange read -p [device path]\n" +
-                "   or: interchange --help\n" +
-                "\n" +
-                "Arguments:\n" +
-                "  -a --board           Board type [uno|nano|promini] - default nano\n" +
-                "  -p --port            Path to serial port / com port (eg. COM1, /dev/ttyUSB0 etc)\n" +
-                "  -I --i2c-address     Set I2C address override [NOT IMPLEMENTED]\n" +
-                "     --firmata         Use custom firmata if it is present\n" +
-                "  -h --help            Prints this message and exits\n" +
-                "  -v --version         Print version\n" +
-                "\n\n";
-
-    console.info(usage);
-}
-
-function list_devices() {
+Interchange.prototype.list_devices = function () {
     // this function lists out all of the devices available to have firmware
     // installed.
 
@@ -63,10 +43,12 @@ function list_devices() {
             firmware.description;
         console.info(outstr);
     });
-}
+};
 
-function list_ports(verbose) {
+Interchange.prototype.list_ports = function (opts) {
     // this function lists out all the ports available to flash firmware
+
+    var verbose = opts.verbose;
 
     Serialport.list(function (err, ports) {
         if (err) {
@@ -83,9 +65,9 @@ function list_ports(verbose) {
             });
         }
     });
-}
+};
 
-function get_firmware_info(port) {
+Interchange.prototype.get_firmware_info = function (port) {
     // attempts to connect to an interchange firmware and get the
     // installed details.
 
@@ -123,9 +105,9 @@ function get_firmware_info(port) {
             this.close();
         }.bind(this));
     })
-}
+};
 
-function set_firmware_details(port, opts, cb) {
+Interchange.prototype.set_firmware_details = function (port, opts, cb) {
     // sets the firmware details for the specifics
 
     ic_client.port = port;
@@ -162,8 +144,9 @@ function set_firmware_details(port, opts, cb) {
             }
         }.bind(this))
     });
-}
-function flash_firmware(firmware, opts, cb) {
+};
+
+Interchange.prototype.flash_firmware = function (firmware, opts, cb) {
     // flashes the board with the options provided.
 
     var board = opts.board || "nano"; // assumes nano if none provided
@@ -186,13 +169,13 @@ function flash_firmware(firmware, opts, cb) {
             port = avrgirl.options.port;
         }
 
-        if (! usingFirmata) {
-            set_firmware_details(port, opts, cb);
+        if (!usingFirmata) {
+            this.set_firmware_details(port, opts, cb);
         }
     }.bind(this));
-}
+};
 
-function download_from_npm(firmware, options, cb) {
+Interchange.prototype.download_from_npm = function (firmware, options, cb) {
     // downloads the firmware from the npm package
 
     console.info(colors.magenta("Installing " + firmware.name + " from npm"));
@@ -218,6 +201,7 @@ function download_from_npm(firmware, options, cb) {
     // as we have installed get the manifest file.
     var base_path = path.join(".", "node_modules", firmware.npm.package)
     var manifest_file = path.join(base_path, "manifest.json");
+
     try {
         var manifest = JSON.parse(fs.readFileSync(manifest_file));
     } catch (e) {
@@ -238,13 +222,16 @@ function download_from_npm(firmware, options, cb) {
     if (manifest_objects.hexPath.indexOf("/") != 0) {
         manifest_objects.hexPath = "/" + manifest_objects.hexPath;
     }
+
+    console.log(base_path, manifest_objects.bins, options.board, manifest_objects.hexPath);
+
     var hex_path = path.join(base_path, manifest_objects.bins, options.board, manifest_objects.hexPath);
 
     cb(hex_path, null,  options);
-}
+};
 
 
-function download_from_github(firmware, options, cb) {
+Interchange.prototype.download_from_github = function (firmware, options, cb) {
     // downloads the firmware from the GH repo
 
     console.info("Retrieving manifest data from GitHub".magenta);
@@ -315,9 +302,9 @@ function download_from_github(firmware, options, cb) {
                     cb(hex_files[0].path, tmp_dir, options);
                 });
         });
-}
+};
 
-function check_firmware(firmware, options, cb) {
+Interchange.prototype.check_firmware = function (firmware, options, cb) {
     // checks if the firmware makes sense and downloads the hex file
     // to a temporary location
 
@@ -368,68 +355,12 @@ function check_firmware(firmware, options, cb) {
     // now check if the firmware is in npm or github.
     if (fw.npm == undefined) {
         // use git repo
-        download_from_github(fw, opts, cb);
+        this.download_from_github(fw, opts, cb);
 
     } else {
         // get from npm now
-        download_from_npm(fw, opts, cb);
+        this.download_from_npm(fw, opts, cb);
     }
-}
+};
 
-if (argv.h || argv.help) {
-    display_help();
-    process.exit(0);
-}
-
-if (argv.v || argv.version) {
-    console.log("NodeBots Interchange version: " + version);
-    process.exit(0);
-}
-
-if (argv._[0] == "list") {
-    list_devices();
-    process.exit(0);
-
-} else if (argv._[0] == "ports") {
-
-    list_ports(argv.verbose);
-
-} else if (argv._[0] == "install") {
-
-    if (argv._[1] == undefined) {
-        console.error("Please supply a firmware to install");
-        process.exit(1);
-    }
-
-    var opts = {
-        board: argv.a || argv.board || process.env.INTERCHANGE_BOARD || "nano",
-        port: argv.p || argv.port || process.env.INTERCHANGE_PORT || "",
-        firmata: argv.firmata || null,
-        i2c_address: argv.i || null,
-    };
-
-    try {
-        check_firmware(argv._[1], opts, function(hex_path, tmp_dir, options) {
-
-            flash_firmware(hex_path, options, function() {
-                // once complete destory the tmp_dir.
-                if (tmp_dir) {
-                    clean_temp_dir(tmp_dir);
-                }
-            });
-        });
-    } catch (e) {
-        console.error(e);
-        process.exit(1);
-    }
-} else if (argv._[0] == "read") {
-
-    var port = argv.p || argv.port || undefined;
-
-    if (port == undefined) {
-        console.error("Please provide a device path");
-        process.exit(1);
-    }
-
-    get_firmware_info(port);
-}
+module.exports = Interchange;
