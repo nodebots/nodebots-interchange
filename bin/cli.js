@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 var program = require('commander');
+var inquirer = require('inquirer');
 var version = require('../package.json').version;
 var Interchange = require('../lib/interchange');
 var interchange = new Interchange();
@@ -32,6 +33,78 @@ program.command("install [firmware]")
     .option("-p, --port <port>", "Serial port board is attached to")
     .option("-f, --firmata [firmata]", "Install firmata version of firmware")
     .option("-i, --address <address>", "Specify I2C address, eg 0x67")
-    .action(interchange.install_firmware.bind(interchange));
+    .option("--interactive", "Interactive mode will prompt for input")
+    .action(function (firmware, opts) {
+
+        if (opts.interactive) {
+
+            interchange.get_ports(function (err, ports) {
+
+                var questions;
+
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                questions = [
+                    {
+                        type: "list",
+                        name: "firmware",
+                        message: "Choose a firmware",
+                        choices: interchange.firmwares.map(function (el) {
+                            return el.name
+                        })
+                    },
+                    {
+                        type: "input",
+                        name: "firmata",
+                        message: "Install firmata version? [y/N]",
+                        default: 'n'
+                    },
+                    {
+                        type: "list",
+                        name: "avr",
+                        message: "Choose a board",
+                        choices: [
+                            "uno",
+                            "nano",
+                            "promini",
+                        ],
+                        default: "nano"
+                    },
+                    {
+                        type: "list",
+                        name: "port",
+                        message: "Choose a port",
+                        choices: ports.map(function (el) {
+                            return el.comName;
+                        }),
+                        default: null
+                    },
+                    {
+                        type: "input",
+                        name: "address",
+                        message: "Choose an I2C address [optional]",
+                        default: null
+                    }
+                ];
+
+                inquirer.prompt(questions, function(answers) {
+                    firmware = answers.firmware;
+                    opts.board = answers.avr;
+                    opts.port = answers.port;
+                    opts.address = answers.address;
+                    opts.firmata = answers.firmata.toLowerCase() === 'n';
+                    interchange.install_firmware(firmware, opts);
+                });
+
+            });
+
+            return;
+        }
+
+        interchange.install_firmware(firmware, opts);
+    });
 
 program.parse(process.argv);
