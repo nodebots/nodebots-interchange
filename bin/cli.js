@@ -63,6 +63,14 @@ program.command("install [firmware]")
                         default: false
                     },
                     {
+                        type: "input",
+                        name: "firmataType",
+                        message: "Firmata name",
+                        when: function (answers) {
+                            return answers.firmata;
+                        }
+                    },
+                    {
                         type: "list",
                         name: "avr",
                         message: "Choose a board",
@@ -95,7 +103,7 @@ program.command("install [firmware]")
                     opts.board = answers.avr;
                     opts.port = answers.port;
                     opts.address = answers.address;
-                    opts.firmata = answers.firmata;
+                    opts.firmata = answers.firmata ? answers.firmataType : answers.firmata;
                     interchange.install_firmware(firmware, opts);
                 });
 
