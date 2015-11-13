@@ -65,7 +65,8 @@ program.command("install [firmware]")
                     {
                         type: "input",
                         name: "firmataType",
-                        message: "Firmata name",
+                        message: "Firmata name [optional]",
+                        default: null,
                         when: function (answers) {
                             return answers.firmata;
                         }
