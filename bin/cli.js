@@ -57,10 +57,10 @@ program.command("install [firmware]")
                         })
                     },
                     {
-                        type: "input",
+                        type: "confirm",
                         name: "firmata",
-                        message: "Install firmata version? [y/N]",
-                        default: 'n'
+                        message: "Install firmata version?",
+                        default: false
                     },
                     {
                         type: "list",
@@ -95,7 +95,7 @@ program.command("install [firmware]")
                     opts.board = answers.avr;
                     opts.port = answers.port;
                     opts.address = answers.address;
-                    opts.firmata = answers.firmata.toLowerCase() === 'n';
+                    opts.firmata = answers.firmata;
                     interchange.install_firmware(firmware, opts);
                 });
 
