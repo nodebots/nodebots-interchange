@@ -2,7 +2,7 @@
 
 var firmware_path = "../lib/firmwares.json";
 
-exports["Devices - Library"] = {
+exports["Firmwares - Library"] = {
     setUp: function(done) {
         this.firmware_list = require(firmware_path).firmwares;
         done();
@@ -19,7 +19,17 @@ exports["Devices - Library"] = {
             test.notEqual(firmware.name, "", ("Name does not exist"));
             test.notEqual(firmware.name, undefined, "Name not present");
             test.notEqual(firmware.address, "", "Default address does not exist: " + firmware.name);
-            test.notEqual(firmware.address, undefined, "Address not present");
+
+            if (firmware.address == undefined) {
+                // check if we're a firmata
+                if (firmware.name.indexOf("Firmata") >= 0) {
+                    test.ok(true, "Firmata only, no I2C address");
+                } else {
+                    test.ok(false, "Address not present " + firmware.name);
+                }
+            } else {
+                test.ok(true, "Address present");
+            }
 
             if (firmware.repo !== undefined || firmware.npm !== undefined) {
                 test.ok(true, "Repo or npm present");
@@ -31,10 +41,29 @@ exports["Devices - Library"] = {
         test.done();
     },
 
-    checkManifestFiles: function(test) {
-        test.expect(1);
+};
 
-        test.ok(false, "No manifest files found");
+exports["Firmwares - Creators"] = {
+    setUp: function(done) {
+        this.creator_list = require(firmware_path).creators;
+        done();
+    },
+
+    tearDown: function(done) {
+        done();
+    },
+
+    checkRequiredFields: function(test) {
+        test.expect(this.creator_list.length * 6);
+        this.creator_list.forEach(function(creator) {
+            test.notEqual(creator.id, undefined, "Creator ID not present");
+            test.notEqual(creator.id, "", "Creator ID not provided");
+            test.notEqual(parseInt(creator.id), NaN, "Creator ID not a number");
+            test.notEqual(creator.gh, undefined, "Github username not provided");
+            test.notEqual(creator.name, undefined, "Name not present");
+            test.notEqual(creator.name, "", "Name not provided");
+        });
+
         test.done();
     },
 };
