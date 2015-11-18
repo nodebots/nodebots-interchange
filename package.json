@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "nodeunit test"
   },
   "repository": {
     "type": "git",
@@ -43,5 +43,8 @@
     "minimist": "^1.2.0",
     "serialport": "^2.0.2",
     "tmp": "0.0.28"
+  },
+  "devDependencies": {
+    "nodeunit": "^0.9.1"
   }
 }
