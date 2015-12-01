@@ -96,6 +96,8 @@ For an interactive interface that will prompt you with choices for each option, 
 interchange install --interactive
 ```
 
+![Interactive CLI demo](https://github.com/ajfisher/nodebots-interchange/raw/master/assets/interchange.gif)
+
 ### Usage examples
 
 Get help:

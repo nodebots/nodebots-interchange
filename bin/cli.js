@@ -4,6 +4,7 @@ var program = require('commander');
 var inquirer = require('inquirer');
 var version = require('../package.json').version;
 var Interchange = require('../lib/interchange');
+var firmwares = require('../lib/firmwares.json').firmwares;
 var interchange = new Interchange();
 
 program
@@ -60,7 +61,14 @@ program.command("install [firmware]")
                         type: "confirm",
                         name: "firmata",
                         message: "Install firmata version?",
-                        default: false
+                        default: false,
+                        when: function (answers) {
+                            var firmware = firmwares.filter(function(obj) {
+                                return obj.name === answers.firmware
+                            });
+
+                            return firmware.length && firmware[0].firmata;
+                        }
                     },
                     {
                         type: "input",
@@ -95,7 +103,10 @@ program.command("install [firmware]")
                         type: "input",
                         name: "address",
                         message: "Choose an I2C address [optional]",
-                        default: null
+                        default: null,
+                        when: function (answers) {
+                            return !answers.firmata;
+                        }
                     }
                 ];
 
@@ -104,7 +115,7 @@ program.command("install [firmware]")
                     opts.board = answers.avr;
                     opts.port = answers.port;
                     opts.address = answers.address;
-                    opts.firmata = answers.firmata ? answers.firmataType : answers.firmata;
+                    opts.firmata = answers.firmataType || answers.firmata;
                     interchange.install_firmware(firmware, opts);
                 });
 
