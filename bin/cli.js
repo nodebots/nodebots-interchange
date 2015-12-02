@@ -1,10 +1,9 @@
 #! /usr/bin/env node
 
 var program = require('commander');
-var inquirer = require('inquirer');
 var version = require('../package.json').version;
 var Interchange = require('../lib/interchange');
-var firmwares = require('../lib/firmwares.json').firmwares;
+var Inquire = require('../lib/inquire');
 var interchange = new Interchange();
 
 program
@@ -36,95 +35,11 @@ program.command("install [firmware]")
     .option("-i, --address <address>", "Specify I2C address, eg 0x67")
     .option("--interactive", "Interactive mode will prompt for input")
     .action(function (firmware, opts) {
-
         if (opts.interactive) {
-
-            interchange.get_ports(function (err, ports) {
-
-                var questions;
-
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-
-                questions = [
-                    {
-                        type: "list",
-                        name: "firmware",
-                        message: "Choose a firmware",
-                        choices: interchange.firmwares.map(function (el) {
-                            return el.name
-                        })
-                    },
-                    {
-                        type: "confirm",
-                        name: "firmata",
-                        message: "Install firmata version?",
-                        default: false,
-                        when: function (answers) {
-                            var firmware = firmwares.filter(function(obj) {
-                                return obj.name === answers.firmware
-                            });
-
-                            return firmware.length && firmware[0].firmata;
-                        }
-                    },
-                    {
-                        type: "input",
-                        name: "firmataType",
-                        message: "Firmata name [optional]",
-                        default: null,
-                        when: function (answers) {
-                            return answers.firmata;
-                        }
-                    },
-                    {
-                        type: "list",
-                        name: "avr",
-                        message: "Choose a board",
-                        choices: [
-                            "uno",
-                            "nano",
-                            "promini",
-                        ],
-                        default: "nano"
-                    },
-                    {
-                        type: "list",
-                        name: "port",
-                        message: "Choose a port",
-                        choices: ports.map(function (el) {
-                            return el.comName;
-                        }),
-                        default: null
-                    },
-                    {
-                        type: "input",
-                        name: "address",
-                        message: "Choose an I2C address [optional]",
-                        default: null,
-                        when: function (answers) {
-                            return !answers.firmata;
-                        }
-                    }
-                ];
-
-                inquirer.prompt(questions, function(answers) {
-                    firmware = answers.firmware;
-                    opts.board = answers.avr;
-                    opts.port = answers.port;
-                    opts.address = answers.address;
-                    opts.firmata = answers.firmataType || answers.firmata;
-                    interchange.install_firmware(firmware, opts);
-                });
-
-            });
-
-            return;
+            var inquire = new Inquire(interchange.install_firmware.bind(interchange));
+        } else {
+            interchange.install_firmware(firmware, opts);
         }
-
-        interchange.install_firmware(firmware, opts);
     });
 
 program.parse(process.argv);
