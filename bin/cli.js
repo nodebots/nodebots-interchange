@@ -3,6 +3,7 @@
 var program = require('commander');
 var version = require('../package.json').version;
 var Interchange = require('../lib/interchange');
+var Inquire = require('../lib/inquire');
 var interchange = new Interchange();
 
 program
@@ -32,6 +33,13 @@ program.command("install [firmware]")
     .option("-p, --port <port>", "Serial port board is attached to")
     .option("-f, --firmata [firmata]", "Install firmata version of firmware")
     .option("-i, --address <address>", "Specify I2C address, eg 0x67")
-    .action(interchange.install_firmware.bind(interchange));
+    .option("--interactive", "Interactive mode will prompt for input")
+    .action(function (firmware, opts) {
+        if (opts.interactive) {
+            var inquire = new Inquire(interchange.install_firmware.bind(interchange));
+        } else {
+            interchange.install_firmware(firmware, opts);
+        }
+    });
 
 program.parse(process.argv);

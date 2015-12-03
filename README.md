@@ -91,6 +91,13 @@ As a convenience, if you would like to install StandardFirmata you can do so by:
 interchange install StandardFirmata -a <board> -p <port>
 ```
 
+For an interactive interface that will prompt you with choices for each option, use
+```
+interchange install --interactive
+```
+
+![Interactive CLI demo](https://github.com/ajfisher/nodebots-interchange/raw/master/assets/interchange.gif)
+
 ### Usage examples
 
 Get help:
