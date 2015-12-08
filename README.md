@@ -96,7 +96,7 @@ For an interactive interface that will prompt you with choices for each option, 
 interchange install --interactive
 ```
 
-![Interactive CLI demo](https://github.com/ajfisher/nodebots-interchange/raw/master/assets/interchange.gif)
+![Interactive CLI demo](docs/assets/interchange.gif)
 
 ### Usage examples
 
@@ -211,4 +211,6 @@ This project would not have seen light were it not for the following people:
 of the idea to augment Johnny Five.
 * Suz Hinton - for the excellent avrgirl which provided considerable heavy lifting on the
 flashing side of things.
+* Derek Wheelden - for tuning the experience of the way Interchange has worked
+to make it more usable.
 * Andy Gelme, Luis Montes - for pushing me on backpacks and keep me moving.

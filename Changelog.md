@@ -1,5 +1,14 @@
 # Interchange Changelog
 
+### 1.0.1
+
+* Use of inquirer to create an interactive shell prompt
+* Release to 1.0 stable as a result of wide usage without any majors.
+
+## 1.0.0-alpha
+
+* alpha release of V1.
+
 ## 0.5.0
 
 * Refactor of the minimist CLI interface to use commander and better help system.
