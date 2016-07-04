@@ -1,5 +1,10 @@
 # Interchange Changelog
 
+### 1.0.2
+
+* Updates to bring packages into line with upstream dependencies
+* Small refactor to inquirer to make it promise based per current standard
+
 ### 1.0.1
 
 * Use of inquirer to create an interactive shell prompt
