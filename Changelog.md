@@ -1,12 +1,18 @@
 # Interchange Changelog
 
+## 1.1.0
+
+* Refactor on serialport to use new module requires.
+* Added ability to now install from a github branch using
+git+https://github.com/<user>/<repo>#<branchname>
+
 ### 1.0.2
 
 * Updates to bring packages into line with upstream dependencies
 * Small refactor to inquirer to make it promise based per current standard
 * Refactor to the download from repo code to make it work with Download npm
 package and promise based design
-* Update serialport package to use v4 
+* Update serialport package to use v4
 
 ### 1.0.1
 
