@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+### 1.1.1
+
+* Updated readme file with new example
+
 ## 1.1.0
 
 * Refactor on serialport to use new module requires.

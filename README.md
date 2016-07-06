@@ -163,6 +163,13 @@ an arduino from git repo on port /dev/tty.wchserial1560 - note the use of
 interchange install git+https://github.com/Makeblock-official/mbot_nodebots -p /dev/tty.wchserial1560 -a uno --firmata bluetooth
 ```
 
+Install the HC-SR04 backpack code on an arduino nano from a named branch on a
+git repo (very handy for testing when you're in dev) on port /dev/tty.wchserial1560
+
+```
+interchange install git+https://github.com/ajfisher/nodebots-hcsr04#devbranch -p /dev/tty.wchserial1560 -a nano
+```
+
 Read the details of a backpack firmware on /dev/tty.usbmodem1130 to see what
 is on it.
 
