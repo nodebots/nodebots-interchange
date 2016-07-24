@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+### 1.1.2
+
+* Better error handling for firmata situations.
+
 ### 1.1.1
 
 * Updated readme file with new example
