@@ -44,20 +44,20 @@ export PATH=./node_modules/.bin:$PATH
 After that just install locally using npm
 
 ```
-npm install ajfisher/nodebots-interchange
+npm install nodebots-interchange
 ```
 
 Or alternatively
 
 ```
-git clone https://github.com/ajfisher/nodebots-interchange.git
+git clone https://github.com/johnny-five-io/nodebots-interchange.git
 npm install
 ```
 
 If you'd prefer to have interchange available to all users globally then do this:
 
 ```
-npm install -g ajfisher/nodebots-interchange
+npm install -g nodebots-interchange
 ```
 
 Once installed you will have access to the `interchange` application which will allow
