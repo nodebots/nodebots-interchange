@@ -23,7 +23,7 @@
       "firmwareID": "0x01",
       "repo": "url",
       "npm": {
-          "package": "node-pixel",
+          "package": "node-pixel"
       },
       "description": "Allows NeoPixels to be used via I2C and the node-pixel controller",
       "docs": "url",
