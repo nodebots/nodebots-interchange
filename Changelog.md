@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+### 1.1.3
+
+* Fixed error when version not supplied for npm installs.
+
 ### 1.1.2
 
 * Better error handling for firmata situations.
