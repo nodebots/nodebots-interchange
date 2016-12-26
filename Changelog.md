@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+### 1.1.5
+
+* Routing nits on documentation
+
 ### 1.1.4
 
 * Removed some artefacts introduced for debugging
