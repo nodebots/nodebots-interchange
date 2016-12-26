@@ -33,19 +33,19 @@
     "interchange": "bin/cli.js"
   },
   "dependencies": {
-    "async": "^1.5.0",
-    "avrgirl-arduino": "^1.4.15",
+    "async": "^2.1.4",
+    "avrgirl-arduino": "^1.11.7",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "download": "^5.0.2",
-    "fs-extra": "^0.30.0",
-    "inquirer": "^1.1.1",
-    "lodash": "^4.13.1",
+    "fs-extra": "^1.0.0",
+    "inquirer": "^2.0.0",
+    "lodash": "^4.17.3",
     "minimist": "^1.2.0",
-    "serialport": "^4.0.0",
-    "tmp": "0.0.28"
+    "serialport": "^4.0.7",
+    "tmp": "0.0.31"
   },
   "devDependencies": {
-    "nodeunit": "^0.9.1"
+    "nodeunit": "^0.10.2"
   }
 }

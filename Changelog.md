@@ -1,5 +1,10 @@
 # Interchange Changelog
 
+### 1.1.4
+
+* Removed some artefacts introduced for debugging
+* Updated dependencies across the board
+
 ### 1.1.3
 
 * Fixed error when version not supplied for npm installs.
