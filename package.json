@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "async": "^2.1.4",
-    "avrgirl-arduino": "^1.9.9",
+    "avrgirl-arduino": "1.9.9",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "download": "^5.0.2",
