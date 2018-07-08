@@ -1,7 +1,7 @@
 # nodebots-interchange
 
 ![](https://img.shields.io/npm/v/nodebots-interchange.svg)
-[![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/ajfisher/nodebots-interchange](https://img.shields.io/badge/Gitter-Join%20Chat-brightgreen.svg)](https://gitter.im/ajfisher/nodebots-interchange?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Greenkeeper badge](https://badges.greenkeeper.io/johnny-five-io/nodebots-interchange.svg)](https://greenkeeper.io/)
 ![](https://img.shields.io/badge/status-Ready-green.svg)
 ![](https://img.shields.io/david/johnny-five-io/nodebots-interchange.svg)
 ![](https://img.shields.io/github/issues/johnny-five-io/nodebots-interchange.svg)
