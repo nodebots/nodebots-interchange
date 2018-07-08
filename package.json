@@ -37,17 +37,17 @@
     "avrgirl-arduino": "git://github.com/ajfisher/avrgirl-arduino.git#update-sp-6",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
-    "download": "^5.0.2",
-    "fs-extra": "^1.0.0",
-    "inquirer": "^2.0.0",
+    "download": "^7.0.0",
+    "fs-extra": "^6.0.1",
+    "inquirer": "^6.0.0",
     "lodash": "^4.17.3",
     "minimist": "^1.2.0",
     "nodebots-hcsr04": "git+https://github.com/ajfisher/nodebots-hcsr04.git",
     "serialport": "^6.2.1",
-    "tmp": "0.0.31"
+    "tmp": "0.0.33"
   },
   "devDependencies": {
     "eslint": "^5.0.1",
-    "nodeunit": "^0.10.2"
+    "nodeunit": "^0.11.2"
   }
 }
