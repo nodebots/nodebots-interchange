@@ -4,6 +4,7 @@
 
 * Updated serialport and avrgirl dependencies to use a newer version of
 node serialport
+* Added eslint and rules for this. Refactor codebase to use the linter
 
 ### 1.1.5
 
