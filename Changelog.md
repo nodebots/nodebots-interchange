@@ -1,5 +1,10 @@
 # Interchange Changelog
 
+## 1.2.0
+
+* Updated serialport and avrgirl dependencies to use a newer version of
+node serialport
+
 ### 1.1.5
 
 * Routing nits on documentation
