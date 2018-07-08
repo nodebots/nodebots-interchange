@@ -6,4 +6,14 @@ node_js:
 git:
   submodules: false
 
+before_install:
+# package-lock.json was introduced in npm@5
+# skipped when using node 9
+- '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest'
+- npm install -g greenkeeper-lockfile
+
 install: npm install
+
+before_script: greenkeeper-lockfile-update
+# only v10 will upload the lockfile
+after_script: greenkeeper-lockfile-upload
