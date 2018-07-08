@@ -129,14 +129,14 @@ firmata as objects, each with their own `bins` and `hexPath` values. For example
 {
     "firmata": {
         "multi": true,
-        "usb": {
-            "bins": "/firmware/bins/usb/",
-            "hexPath": "/firmware_usb.hex"
-        },
-        "bluetooth": {
-            "bins": "/firmware/bins/bluetooth/",
-            "hexPath": "/firmware_bluetooth.hex"
-        }
+            "usb": {
+                "bins": "/firmware/bins/usb/",
+                "hexPath": "/firmware_usb.hex"
+            },
+            "bluetooth": {
+                "bins": "/firmware/bins/bluetooth/",
+                "hexPath": "/firmware_bluetooth.hex"
+            }
     }
 }
 ```
