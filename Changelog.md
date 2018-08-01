@@ -1,5 +1,10 @@
 # Interchange Changelog
 
+## 1.3.0
+
+* Updated FS Extras package to newer version that is a major update.
+
+
 ## 1.2.0
 
 * Updated serialport and avrgirl dependencies to use a newer version of
