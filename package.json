@@ -43,7 +43,7 @@
     "lodash": "^4.17.3",
     "minimist": "^1.2.0",
     "nodebots-hcsr04": "git+https://github.com/ajfisher/nodebots-hcsr04.git",
-    "serialport": "^6.2.1",
+    "serialport": "^7.0.1",
     "tmp": "0.0.33"
   },
   "devDependencies": {
