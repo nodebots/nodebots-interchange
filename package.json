@@ -40,7 +40,7 @@
     "download": "^7.0.0",
     "fs-extra": "^7.0.0",
     "inquirer": "^6.0.0",
-    "lodash": "^4.17.3",
+    "lodash": "^4.17.15",
     "minimist": "^1.2.0",
     "nodebots-hcsr04": "git+https://github.com/ajfisher/nodebots-hcsr04.git",
     "serialport": "^7.0.1",
