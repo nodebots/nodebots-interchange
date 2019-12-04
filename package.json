@@ -43,7 +43,7 @@
     "lodash": "^4.17.15",
     "minimist": "^1.2.0",
     "serialport": "^7.0.1",
-    "tmp": "0.0.33"
+    "tmp": "^0.1.0"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
