@@ -33,7 +33,7 @@
     "interchange": "bin/cli.js"
   },
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^3.1.0",
     "avrgirl-arduino": "git://github.com/ajfisher/avrgirl-arduino.git#update-sp-6",
     "colors": "^1.4.0",
     "commander": "^4.0.1",
