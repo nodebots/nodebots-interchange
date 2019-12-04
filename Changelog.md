@@ -1,5 +1,12 @@
 # Interchange Changelog
 
+## 1.4.0
+
+* Updated considerable number of packages:
+* AVR Girl - thanks @noopkat
+* Lodash, FS Extras, async, colors, commander, inquirer
+* updated all security packages
+
 ## 1.3.0
 
 * Updated FS Extras package to newer version that is a major update.
