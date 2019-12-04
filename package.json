@@ -35,7 +35,7 @@
   "dependencies": {
     "async": "^2.1.4",
     "avrgirl-arduino": "git://github.com/ajfisher/avrgirl-arduino.git#update-sp-6",
-    "colors": "^1.1.2",
+    "colors": "^1.4.0",
     "commander": "^2.9.0",
     "download": "^7.0.0",
     "fs-extra": "^7.0.0",
