@@ -2,7 +2,7 @@ name: Build process
 on: [push, pull_request]
 
 jobs:
-  lint:
+  test:
     name: Test installing the code
     runs-on: ubuntu-latest
     strategy:
@@ -26,3 +26,6 @@ jobs:
 
       - name: Install deps
         run: npm install
+
+      - name: Run tests
+        run: npm run test
