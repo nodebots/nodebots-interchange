@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    name: Lint the code
+    name: Test installing the code
     runs-on: ubuntu-latest
     strategy:
       matrix:
