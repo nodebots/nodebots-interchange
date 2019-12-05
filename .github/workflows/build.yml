@@ -21,8 +21,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: build-${{ matrix-node }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: build-${{ matrix-node }}-${{ hashFiles('**/package-lock.json') }}
+          key: build-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: build-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install deps
         run: npm install
