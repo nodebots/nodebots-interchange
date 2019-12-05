@@ -1,0 +1,28 @@
+name: Build process
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Lint the code
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [8, 10, 12]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: build-${{ matrix-node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: build-${{ matrix-node }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install deps
+        run: npm install
