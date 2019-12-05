@@ -1,5 +1,9 @@
 # Interchange Changelog
 
+## 1.5.0
+
+* Full serialport version upgrade and updates to reflect new style of calling
+
 ## 1.4.0
 
 * Updated considerable number of packages:
