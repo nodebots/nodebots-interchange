@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    name: Test installing the code
+    name: Build and test
     runs-on: ubuntu-latest
     strategy:
       matrix:
