@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: make tests
 
-      - name: Coverage data
-        run: make test-coverage
+      - name: Coverage
+        uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.github_token }}
