@@ -25,7 +25,10 @@ jobs:
           restore-keys: build-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install deps
-        run: npm install
+        run: make install
+
+      - name: Lint code
+        run: make lint
 
       - name: Run tests
-        run: npm run test
+        run: make tests
