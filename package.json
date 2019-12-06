@@ -21,7 +21,8 @@
   "scripts": {
     "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint .",
-    "coverage": "./node_modules/.bin/jest --collectCoverage=true"
+    "coverage": "./node_modules/.bin/jest --collectCoverage=true",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",

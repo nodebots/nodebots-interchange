@@ -32,3 +32,8 @@ jobs:
 
       - name: Run tests
         run: make tests
+
+      - name: Coverage data
+        run: make test-coverage
+        with:
+          github-token: ${{ secrets.github_token }}
