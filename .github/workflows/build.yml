@@ -25,15 +25,10 @@ jobs:
           restore-keys: build-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install deps
-        run: make install
+        run: npm install
 
       - name: Lint code
         run: make lint
 
       - name: Run tests
-        run: make test-coverage
-
-      - name: Coverage
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.github_token }}
+        run: make tests
