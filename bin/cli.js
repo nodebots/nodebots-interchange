@@ -16,7 +16,7 @@ program.command('list')
   .action(() => {
     const list = interchange.list_devices();
     let outstr = '\nFirmwares available for backpacks. (f) denotes a firmata version is available\n\n';
-    list.firmwares.forEach((fw) => {
+    list.forEach((fw) => {
       outstr += ` ${fw.name} ${fw.firmata ? '(f)' : ''}: ${fw.description}\n`;
     });
     console.info(outstr);
@@ -26,7 +26,22 @@ program.command('ports')
   .description('Lists all of the attached boards and their ports')
   .alias('p')
   .option('-v, --verbose', 'List with additional information')
-  .action(interchange.list_ports.bind(interchange));
+  .action((opts) => {
+    // get the ports and then list them out.
+    interchange.get_ports()
+      .then((ports) => {
+        if (opts.verbose) {
+          console.info(ports);
+        } else {
+          ports.forEach((port) => {
+            console.info(port.path.cyan);
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
 
 program.command('read')
   .description('Read firmware info from port')
