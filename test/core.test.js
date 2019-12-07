@@ -61,5 +61,12 @@ const interchange_utilities = () => describe('2. Utility actions should run corr
   });
 });
 
+const interchange_actions = () => describe('3. Hardware actions should run correctly', () => {
+  beforeAll(() => {
+    interchange = new Interchange();
+  });
+});
+
 interchange_shape();
 interchange_utilities();
+interchange_actions();
