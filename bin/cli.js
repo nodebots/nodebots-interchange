@@ -38,9 +38,7 @@ program.command('ports')
           });
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => console.log(err));
   });
 
 program.command('read')
