@@ -1,4 +1,3 @@
-
 const firmware_path = '../lib/firmwares.json';
 
 let firmwares;

@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+const _ = require('lodash');
 const program = require('commander');
 const version = require('../package.json').version;
 const Interchange = require('../lib/interchange');
@@ -12,7 +13,14 @@ program
 program.command('list')
   .description('Lists all of the available firmwares')
   .alias('l')
-  .action(interchange.list_devices.bind(interchange));
+  .action(() => {
+    const list = interchange.list_devices();
+    let outstr = '\nFirmwares available for backpacks. (f) denotes a firmata version is available\n\n';
+    list.firmwares.forEach((fw) => {
+      outstr += ` ${fw.name} ${fw.firmata ? '(f)' : ''}: ${fw.description}\n`;
+    });
+    console.info(outstr);
+  });
 
 program.command('ports')
   .description('Lists all of the attached boards and their ports')
