@@ -1,3 +1,5 @@
+const fs = require('fs');
+const tmp = require('tmp');
 
 const Interchange = require('../lib/interchange');
 
@@ -11,7 +13,6 @@ const interchange_shape = () => describe('1.Shape of the interchange object is c
   beforeAll(() => {
     interchange = new Interchange();
   });
-
 
   test('1.1 Can we list the firmwares', () => {
     // console.log(interchange);
@@ -36,6 +37,29 @@ const interchange_shape = () => describe('1.Shape of the interchange object is c
     expect(get).toBeDefined();
     expect(get).toEqual(list);
   });
+
+  test('1.4 Does the firwares object exist', () => {
+    expect(interchange.firmwares).toBeDefined();
+  });
+});
+
+const interchange_utilities = () => describe('2. Utility actions should run correctly', () => {
+  // Check that the various utility actions occur properly.
+  beforeAll(() => {
+    interchange = new Interchange();
+  });
+
+  test('2.1 Are temporary directories removed', () => {
+    const tmpdir = tmp.dirSync();
+
+    // whilst this doesn't test our lib it does just make sure it's set up right.
+    expect(fs.existsSync(tmpdir.name)).toBe(true);
+
+    // now we test if it's worked or not
+    interchange.clean_temp_dir(tmpdir);
+    expect(fs.existsSync(tmpdir.name)).toBe(false);
+  });
 });
 
 interchange_shape();
+interchange_utilities();
