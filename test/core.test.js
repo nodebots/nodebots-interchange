@@ -61,12 +61,25 @@ const interchange_utilities = () => describe('2. Utility actions should run corr
   });
 });
 
-const interchange_actions = () => describe('3. Hardware actions should run correctly', () => {
+const interchange_install = () => describe('3. Installation actions should run correctly', () => {
   beforeAll(() => {
     interchange = new Interchange();
+  });
+
+  test('3.1 Throw error if no firmware given to installer', () => {
+    const install_firmware = () => { interchange.install_firmware(null) };
+    expect(install_firmware).toThrowError(/firmware/);
+  });
+
+  test('3.2 Throw error if failure of firmware check', () => {
+    const no_firmware_name = () => { interchange.check_firmware(null) };
+    const invalid_firmware_name = () => { interchange.check_firmware('test') };
+
+    expect(no_firmware_name).toThrowError(/firmware/);
+    expect(invalid_firmware_name).toThrowError(/firmware/);
   });
 });
 
 interchange_shape();
 interchange_utilities();
-interchange_actions();
+interchange_install();
