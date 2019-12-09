@@ -22,6 +22,29 @@ const npm_fw = {
   'firmata': false
 };
 
+const gh_fw = {
+  'name': 'test_firmware',
+  'deviceID': 0x01,
+  'creatorID': 0x00,
+  'repo': 'git+https://github.com/test/test-package',
+  'firmata': false
+};
+
+const gh_fw2 = {
+  'name': 'test_firmware2',
+  'deviceID': 0x01,
+  'creatorID': 0x00,
+  'firmata': false
+};
+
+const gh_fw3 = {
+  'name': 'test_firmware3',
+  'deviceID': 0x01,
+  'creatorID': 0x00,
+  'repo': 'https://github.com/test/test-package',
+  'firmata': false
+};
+
 const manifest = {
   'backpack': {
     'bins': '/firmware/bin/backpack/',
@@ -41,6 +64,7 @@ const options = {
   useFirmata: true,
   firmataName: ''
 };
+
 
 const download_actions = () => describe('1. Download options return hex files', () => {
   beforeEach(() => jest.resetModules());
@@ -66,21 +90,35 @@ const download_actions = () => describe('1. Download options return hex files', 
   test('1.4 Firmware in NPM chooses NPM download method', async() => {
     const dl = new Downloader({fw: npm_fw});
 
-    // set up a mock implementation for this test.
-    const mock_npm_download = jest.fn()
+    // set up a mock implementation for the download instance which passes and fails
+    const mock_download = jest.fn()
       .mockResolvedValue('mock/filepath')
       .mockResolvedValueOnce('mock-firstpath')
       .mockRejectedValueOnce(new Error('not downloadable'));
 
-    dl.download_from_npm = mock_npm_download;
+    dl.download_from_npm = mock_download;
 
     const hexfile = await dl.download();
-    expect(mock_npm_download).toBeCalled();
+    expect(mock_download).toBeCalled();
     // test rejection form
     expect(dl.download()).rejects.toThrow(/not downloadable/);
   });
 
-  test('1.5 Firmware in Github chooses Github download method', () => {
+  test('1.5 Firmware in Github chooses Github download method', async() => {
+    const dl = new Downloader({fw: gh_fw});
+
+    // set up a mock implementation for the download instance which passes and fails
+    const mock_download = jest.fn()
+      .mockResolvedValue('mock/filepath')
+      .mockResolvedValueOnce('mock-firstpath')
+      .mockRejectedValueOnce(new Error('not downloadable'));
+
+    dl.download_from_github = mock_download;
+
+    const hexfile = await dl.download();
+    expect(mock_download).toBeCalled();
+    // test rejection form
+    expect(dl.download()).rejects.toThrow(/not downloadable/);
   });
 
 
@@ -155,7 +193,22 @@ const npm_actions = () => describe('3. NPM related actions for the downloader', 
   });
 });
 
+const github_actions = () => describe('4. Github related actions for the downloader', () => {
+  // test actions relating to the GH way of getting the files
+  test('4.1 Getting GH manifest fails if no repo supplied', () => {
+    const dl = new Downloader();
+    expect(dl.download_from_github()).rejects.toThrow(/firmware/);
+  });
+
+  test('4.2 getting GH manifest fails if GH configuration is wrong', () => {
+    const dl = new Downloader();
+    expect(dl.download_from_github(gh_fw2)).rejects.toThrow(/github/);
+    expect(dl.download_from_github(gh_fw3)).rejects.toThrow(/protocol/);
+  });
+});
+
 
 download_actions();
 download_utilities();
 npm_actions();
+github_actions();
