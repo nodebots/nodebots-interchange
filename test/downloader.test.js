@@ -2,75 +2,15 @@ const child_process = require('child_process');
 jest.mock('child_process');
 
 const Downloader = require('../lib/downloader');
-
-let downloader;
-const fw = {
-  'name': 'test_firmware',
-  'deviceID': 0x01,
-  'creatorID': 0x00,
-  'repo': 'github',
-  'firmata': false
-};
-
-const npm_fw = {
-  'name': 'test_firmware',
-  'deviceID': 0x01,
-  'creatorID': 0x00,
-  'npm': {
-    'package': 'test-pkg'
-  },
-  'firmata': false
-};
-
-const gh_fw = {
-  'name': 'test_firmware',
-  'deviceID': 0x01,
-  'creatorID': 0x00,
-  'repo': 'git+https://github.com/test/test-package',
-  'firmata': false
-};
-
-const gh_fw2 = {
-  'name': 'test_firmware2',
-  'deviceID': 0x01,
-  'creatorID': 0x00,
-  'firmata': false
-};
-
-const gh_fw3 = {
-  'name': 'test_firmware3',
-  'deviceID': 0x01,
-  'creatorID': 0x00,
-  'repo': 'https://github.com/test/test-package',
-  'firmata': false
-};
-
-const manifest = {
-  'backpack': {
-    'bins': '/firmware/bin/backpack/',
-    'hexPath': '/backpack.ino.hex'
-  },
-  'firmata': {
-    'bins': '/firmware/bin/firmata/',
-    'hexPath': '/firmata.ino.hex'
-  }
-};
-
-const options = {
-  board: 'nano',
-  port: '/dev/dummy',
-  firmata: true,
-  i2c_address: undefined,
-  useFirmata: true,
-  firmataName: ''
-};
-
+const data = require('./config/downloader');
 
 const download_actions = () => describe('1. Download options return hex files', () => {
   beforeEach(() => jest.resetModules());
 
+
   test('1.1 Pass in a firmware and it stays set', () => {
-    downloader = new Downloader({fw});
+    const {fw} = data;
+    const downloader = new Downloader({fw});
     expect(downloader.fw.name).toBe(fw.name);
     expect(downloader.fw.firmata).toBe(false);
     expect(downloader.fw.repo).toBe(fw.repo);
@@ -88,6 +28,7 @@ const download_actions = () => describe('1. Download options return hex files', 
   });
 
   test('1.4 Firmware in NPM chooses NPM download method', async() => {
+    const {npm_fw} = data;
     const dl = new Downloader({fw: npm_fw});
 
     // set up a mock implementation for the download instance which passes and fails
@@ -105,6 +46,7 @@ const download_actions = () => describe('1. Download options return hex files', 
   });
 
   test('1.5 Firmware in Github chooses Github download method', async() => {
+    const {gh_fw} = data;
     const dl = new Downloader({fw: gh_fw});
 
     // set up a mock implementation for the download instance which passes and fails
@@ -123,6 +65,7 @@ const download_actions = () => describe('1. Download options return hex files', 
 
 
   test('1.8 Reading manifest file fails if no firmware or manifest data', () => {
+    const {npm_fw, manifest} = data;
     const dl = new Downloader();
     const no_manifest = () => { dl.get_path_from_manifest(undefined, npm_fw) };
     const no_firmware = () => { dl.get_path_from_manifest(manifest, undefined) };
@@ -134,6 +77,7 @@ const download_actions = () => describe('1. Download options return hex files', 
   });
 
   test('1.8 Get hex path from manifest', () => {
+    const {npm_fw, manifest, options} = data;
     const dl = new Downloader();
 
     // try standard form which gets firmata
@@ -165,6 +109,7 @@ const download_utilities = () => describe('2. Utilities to help download', () =>
   });
 
   test('2.3 Basepath for npm is properly formed', () => {
+    const {npm_fw} = data;
     const dl = new Downloader();
     expect(dl.get_npm_basepath(npm_fw)).toBe('node_modules/test-pkg');
   });
@@ -179,6 +124,7 @@ const npm_actions = () => describe('3. NPM related actions for the downloader', 
   });
 
   test('3.2 Getting NPM manifest', async() => {
+    const {npm_fw, options, manifest} = data;
     const dl = new Downloader();
 
     // set up a mock implementation so we don't need to install package via npm
@@ -188,7 +134,7 @@ const npm_actions = () => describe('3. NPM related actions for the downloader', 
 
     dl.get_manifest_from_npm = mock_npm_get_manifest;
 
-    const hexpath = await dl.download_from_npm(npm_fw, options);
+    const {hexpath} = await dl.download_from_npm(npm_fw, options);
     expect(hexpath).toBe('node_modules/test-pkg/firmware/bin/backpack/uno/backpack.ino.hex');
   });
 });
@@ -201,9 +147,24 @@ const github_actions = () => describe('4. Github related actions for the downloa
   });
 
   test('4.2 getting GH manifest fails if GH configuration is wrong', () => {
+    const {gh_fw2, gh_fw3} = data;
     const dl = new Downloader();
     expect(dl.download_from_github(gh_fw2)).rejects.toThrow(/github/);
     expect(dl.download_from_github(gh_fw3)).rejects.toThrow(/protocol/);
+  });
+
+  test('4.3 Reolve manifest from GitHub if git branch is supplied', async() => {
+    const {gh_branch_fw, manifest, options} = data;
+    const dl = new Downloader();
+    const mock_download = jest.fn()
+      .mockResolvedValue(manifest)
+      .mockResolvedValueOnce(manifest)
+      .mockResolvedValueOnce('data');
+
+    dl.get_file_from_github = mock_download;
+    const m = await dl.download_from_github(gh_branch_fw, options);
+    // TODO why is this calling the old get file rather than the mocked one...?:w
+    expect(dl.get_file_from_github).toHaveBeenCalled();
   });
 });
 
