@@ -51,6 +51,14 @@ module.exports = {
     'firmata': false
   },
 
+  gh_master_branch_fw: {
+    'name': 'test_firmware5',
+    'deviceID': 0x01,
+    'creatorID': 0x00,
+    'repo': 'git+https://github.com/test/test-package',
+    'firmata': false
+  },
+
   manifest: {
     'backpack': {
       'bins': '/firmware/bin/backpack/',
