@@ -20,6 +20,28 @@ module.exports = {
     'firmata': false
   },
 
+  npm_fw_ver: {
+    'name': 'test_firmware',
+    'deviceID': 0x01,
+    'creatorID': 0x00,
+    'npm': {
+      'package': 'test-pkg',
+      'version': '2.7.3'
+    },
+    'firmata': false
+  },
+
+  npm_fw_repo: {
+    'name': 'test_firmware',
+    'deviceID': 0x01,
+    'creatorID': 0x00,
+    'npm': {
+      'repo': 'git+https://www.github.com/test/test-package',
+      'package': 'test-pkg'
+    },
+    'firmata': false
+  },
+
   gh_fw: {
     'name': 'test_firmware',
     'deviceID': 0x01,
@@ -62,7 +84,7 @@ module.exports = {
   manifest: {
     'backpack': {
       'bins': '/firmware/bin/backpack/',
-      'hexPath': '/backpack.ino.hex'
+      'hexPath': 'backpack.ino.hex'
     },
     'firmata': {
       'bins': '/firmware/bin/firmata/',
@@ -100,5 +122,21 @@ module.exports = {
     i2c_address: undefined,
     useFirmata: true,
     firmataName: 'firmata2'
+  },
+
+  no_named_firmata_options: {
+    board: 'nano',
+    port: '/dev/dummy',
+    firmata: true,
+    i2c_address: undefined,
+    useFirmata: true
+  },
+
+  backpack_options: {
+    board: 'uno',
+    port: '/dev/dummy',
+    firmata: false,
+    i2c_address: undefined,
+    useFirmata: false
   }
 }
