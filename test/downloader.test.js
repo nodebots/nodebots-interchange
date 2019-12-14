@@ -1,3 +1,5 @@
+const fs            = require('fs');
+const fsextra       = require('fs-extra');
 const child_process = require('child_process');
 jest.mock('child_process');
 
@@ -141,30 +143,100 @@ const npm_actions = () => describe('3. NPM related actions for the downloader', 
 
 const github_actions = () => describe('4. Github related actions for the downloader', () => {
   // test actions relating to the GH way of getting the files
+  let dl;
+  let temppath;
+  beforeEach(() => {
+    jest.resetModules();
+    dl = new Downloader();
+  });
+
+  afterEach(() => {
+    // clean up temp path if it's been set
+    if (temppath) {
+      console.log('cleaning up: ', temppath.name);
+      fsextra.removeSync(temppath.name);
+      temppath.removeCallback();
+      temppath = null;
+    }
+  });
+
   test('4.1 Getting GH manifest fails if no repo supplied', () => {
-    const dl = new Downloader();
+    // const dl = new Downloader();
     expect(dl.download_from_github()).rejects.toThrow(/firmware/);
   });
 
   test('4.2 getting GH manifest fails if GH configuration is wrong', () => {
+    // tests no repo provided and no git+ssh on path
     const {gh_fw2, gh_fw3} = data;
-    const dl = new Downloader();
+    // const dl = new Downloader();
     expect(dl.download_from_github(gh_fw2)).rejects.toThrow(/github/);
     expect(dl.download_from_github(gh_fw3)).rejects.toThrow(/protocol/);
   });
 
-  test('4.3 Reolve manifest from GitHub if git branch is supplied', async() => {
-    const {gh_branch_fw, manifest, options} = data;
-    const dl = new Downloader();
+  test('4.3 Resolve manifest from GitHub if git branch is supplied', (done) => {
+    // const dl4 = new Downloader();
+    const {manifest, gh_branch_fw, options} = data;
+
     const mock_download = jest.fn()
       .mockResolvedValue(manifest)
       .mockResolvedValueOnce(manifest)
       .mockResolvedValueOnce('data');
 
     dl.get_file_from_github = mock_download;
-    const m = await dl.download_from_github(gh_branch_fw, options);
-    // TODO why is this calling the old get file rather than the mocked one...?:w
-    expect(dl.get_file_from_github).toHaveBeenCalled();
+
+    expect.assertions(3);
+    return dl.download_from_github(gh_branch_fw, options)
+      .then((m) => {
+        expect(dl.get_file_from_github).toHaveBeenCalled();
+        expect(m.hexpath).toBeDefined();
+        expect(m.tmpdir).toBeDefined();
+        // clean up tmp files
+        temppath = m.tmpdir;
+        done();
+      });
+  });
+
+  test('4.4 Resolve manifest file if branch not supplied', (done) => {
+    // this tests using master branch.
+    const {manifest, gh_master_branch_fw, options} = data;
+
+    const mock_download = jest.fn()
+      .mockResolvedValue(manifest)
+      .mockResolvedValueOnce(manifest)
+      .mockResolvedValueOnce('data');
+
+    dl.get_file_from_github = mock_download;
+
+    expect.assertions(3);
+    return dl.download_from_github(gh_master_branch_fw, options)
+      .then((m) => {
+        expect(dl.get_file_from_github).toHaveBeenCalled();
+        expect(m.hexpath).toBeDefined();
+        expect(m.tmpdir).toBeDefined();
+        // clean up tmp files
+        temppath = m.tmpdir;
+        done();
+      });
+  });
+
+  test('4.5 Handle not receiving the hex file from download', (done) => {
+    // this tests using master branch.
+    const {manifest, gh_master_branch_fw, options} = data;
+
+    const mock_download = jest.fn()
+      .mockResolvedValue(manifest)
+      .mockResolvedValueOnce(manifest)
+      .mockRejectedValueOnce(new Error('Bin download error'));
+
+    dl.get_file_from_github = mock_download;
+
+    expect.assertions(2);
+    return dl.download_from_github(gh_master_branch_fw, options)
+      .catch(err => {
+        expect(dl.get_file_from_github).toHaveBeenCalled();
+        expect(err.toString()).toMatch(/download/);
+        done();
+      });
   });
 });
 
