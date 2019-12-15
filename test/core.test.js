@@ -66,9 +66,15 @@ const interchange_install = () => describe('3. Installation actions should run c
     interchange = new Interchange();
   });
 
-  test('3.1 Throw error if no firmware given to installer', () => {
+  test('3.1 Throw error if no firmware given to installer', (done) => {
     const install_firmware = () => { interchange.install_firmware(null) };
-    expect(install_firmware).toThrowError(/firmware/);
+    expect.assertions(1)
+    return interchange.install_firmware(null)
+      .catch(err => {
+        expect(err.toString()).toMatch(/firmware/);
+        done();
+      });
+    // return expect(install_firmware).rejects.toThrowError(/firmware/);
   });
 
   test('3.2 Throw error if failure of firmware check', () => {
