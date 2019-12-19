@@ -1,7 +1,6 @@
 const fs = require('fs');
 const tmp = require('tmp');
 
-const Downloader = require('../lib/downloader');
 const Interchange = require('../lib/interchange');
 
 const creators = require('../lib/firmwares.json').creators;
@@ -9,6 +8,7 @@ const firmwares = require('../lib/firmwares.json').firmwares;
 const data = require('./config/interchange');
 
 jest.mock('../lib/downloader');
+const Downloader = require('../lib/downloader');
 
 let interchange;
 
@@ -97,19 +97,28 @@ const interchange_download = () => describe('4. Interchange should set up the do
   });
 
   test('4.1 Download fails if no firmware is supplied', () => {
+    Downloader.mockImplementation(() => {
+      return {
+        download: (f, o) => { return Promise.reject(new Error('no firmware provided')) }
+      }
+    });
     return expect(interchange.download_firmware()).rejects.toThrow(/firmware/);
   });
 
   test('4.2 Download returns an object that has a hex path and a temp file', (done) => {
     const { fw, options } = data;
     // set up a mock implementation so we don't need to install package via npm
-    Downloader.download = jest.fn()
-      .mockResolvedValue({hexpath: '/path/to/file', tmpdir: null});
+    Downloader.mockImplementation(() => {
+      return {
+        download: (f, o) => { return Promise.resolve({hexpath: '/path/to/file', tmpdir: 'data'}) }
+      }
+    });
 
-    expect.assertions(1);
+    expect.assertions(2);
     return interchange.download_firmware(fw, options)
       .then(({hexpath, tmpdir}) => {
         expect(hexpath).toBe('/path/to/file');
+        expect(tmpdir).toBe('data');
         done();
       });
   });
