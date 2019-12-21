@@ -92,6 +92,7 @@ const interchange_utilities = () => describe('2. Utility actions should run corr
 const interchange_install = () => describe('3. Installation actions should run correctly', () => {
   const check_firmware_mock_pass = jest.fn().mockImplementation((f, o) => {
     // creates a simple passing mock for firmware check
+    o['useFirmata'] = true;
     return {fw: f, opts: o};
   });
 
@@ -105,9 +106,19 @@ const interchange_install = () => describe('3. Installation actions should run c
     return Promise.resolve({hexpath: '/path/to/file', tmpdir: 'data'});
   });
 
+  const download_firmware_mock_pass_no_tmp = jest.fn().mockImplementation((f, o) => {
+    // creates a resolving mock for download with no returned tmp file.
+    return Promise.resolve({hexpath: '/path/to/file'});
+  });
+
   const flash_firmware_mock_fail = jest.fn().mockImplementation((hp, o) => {
     // creates a rejecting mock for download
     return Promise.reject(new Error('Cannot flash firmware'));
+  });
+
+  const flash_firmware_mock_pass = jest.fn().mockImplementation((hp, o) => {
+    // creates a resolving mock for download
+    return Promise.resolve('/dev/path/to/port');
   });
 
   beforeEach(() => {
@@ -124,15 +135,7 @@ const interchange_install = () => describe('3. Installation actions should run c
       });
   });
 
-  test('3.2 Throw error if failure of firmware check', () => {
-    const no_firmware_name = () => { interchange.check_firmware(null) };
-    const invalid_firmware_name = () => { interchange.check_firmware('test') };
-
-    expect(no_firmware_name).toThrowError(/firmware/);
-    expect(invalid_firmware_name).toThrowError(/firmware/);
-  });
-
-  test('3.3 Install should throw the error if download fails', (done) => {
+  test('3.2 Install should throw the error if download fails', (done) => {
     const {fw, options} = data;
 
     interchange.check_firmware = check_firmware_mock_pass;
@@ -146,7 +149,7 @@ const interchange_install = () => describe('3. Installation actions should run c
       });
   });
 
-  test('3.4 Install should throw an error if the flash fails', (done) => {
+  test('3.3 Install should throw an error if the flash fails', (done) => {
     const {fw, options} = data;
 
     interchange.check_firmware = check_firmware_mock_pass;
@@ -160,9 +163,24 @@ const interchange_install = () => describe('3. Installation actions should run c
         done();
       });
   });
-  // TODO: Continue checks here of the flow happening and aborting at the right moments
-  // install should fail if flash fails
-  // install should proceed under those various conditions as well.
+
+  test('3.4 Install should flash and then return the port of the flashed board', (done) => {
+    const {fw, options} = data;
+
+    interchange.check_firmware = check_firmware_mock_pass;
+    interchange.download_firmware = download_firmware_mock_pass_no_tmp;
+    interchange.flash_firmware = flash_firmware_mock_pass;
+
+    // expect.assertions(1);
+    return interchange.install_firmware(fw, options)
+      .then(() => {
+        // only test needed here is that everything returned okay.
+        done();
+      });
+  });
+
+  // TODO Test that the client connection etc all works as necessary to configure
+  // interchange client.
 });
 
 const interchange_download = () => describe('4. Interchange should set up the download correctly', () => {
@@ -224,9 +242,74 @@ const interchange_flash = () => describe('5. Flashing of firmware is handled pro
         done();
       });
   });
+
+  test('5.2 If flash works it should return the port that was flashed to', (done) => {
+    const {fw, options} = data;
+    // set up a mock implementation so we don't need to install package via npm
+    // which returns correctly.
+    avrgirl.mockImplementation(() => {
+      return {
+        flash: (f, cb) => {
+          cb(null, '');
+        }
+      }
+    });
+    expect.assertions(1);
+    return interchange.flash_firmware(fw, options)
+      .then(port => {
+        expect(port).toEqual(options.port);
+        done();
+      });
+  });
+
+  test('5.3 If flash works with empty port it should return the one flashed to', (done) => {
+    const {fw, options_no_port} = data;
+    avrgirl.mockImplementation(() => {
+      return {
+        flash: (f, cb) => { cb(null, '/dev/path/to/port') },
+        options: {
+          port: '/dev/path/to/port'
+        }
+      }
+    });
+    expect.assertions(1);
+    return interchange.flash_firmware(fw, options_no_port)
+      .then(port => {
+        expect(port).toEqual('/dev/path/to/port');
+        done();
+      });
+  });
 });
+
+const interchange_check = () => describe('6. Preinstallation checks work correctly', () => {
+  beforeEach(() => {
+    jest.resetModules();
+    interchange = new Interchange();
+  });
+
+  test('6.1 Passing in a git repo url should return a firmware object', () => {
+    const url = 'git+https://github.com/test/test';
+    const {fw,opts} = interchange.check_firmware(url);
+
+    expect(fw).toBeDefined();
+    expect(fw.name).toBeDefined();
+    expect(fw.repo).toBeDefined();
+    expect(fw.name).toEqual(url);
+    expect(fw.repo).toEqual(url);
+  });
+
+  test('6.2 Throw error if failure of firmware check', () => {
+    const no_firmware_name = () => { interchange.check_firmware(null) };
+    const invalid_firmware_name = () => { interchange.check_firmware('test') };
+
+    expect(no_firmware_name).toThrowError(/firmware/);
+    expect(invalid_firmware_name).toThrowError(/firmware/);
+  });
+});
+
 interchange_shape();
 interchange_utilities();
 interchange_install();
 interchange_download();
 interchange_flash();
+interchange_check();

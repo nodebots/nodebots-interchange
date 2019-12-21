@@ -7,11 +7,19 @@ module.exports = {
     'deviceID': 0x01,
     'creatorID': 0x00,
     'repo': 'github',
-    'firmata': false
+    'firmata': true
   },
   options: {
     board: 'nano',
     port: '/dev/dummy',
+    firmata: true,
+    i2c_address: undefined,
+    useFirmata: true,
+    firmataName: ''
+  },
+  options_no_port: {
+    board: 'nano',
+    port: '',
     firmata: true,
     i2c_address: undefined,
     useFirmata: true,
