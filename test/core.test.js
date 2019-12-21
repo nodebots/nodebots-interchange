@@ -90,20 +90,38 @@ const interchange_utilities = () => describe('2. Utility actions should run corr
 });
 
 const interchange_install = () => describe('3. Installation actions should run correctly', () => {
+  const check_firmware_mock_pass = jest.fn().mockImplementation((f, o) => {
+    // creates a simple passing mock for firmware check
+    return {fw: f, opts: o};
+  });
+
+  const download_firmware_mock_fail = jest.fn().mockImplementation((f, o) => {
+    // creates a rejecting mock for download
+    return Promise.reject(new Error('Cannot download firmware'));
+  });
+
+  const download_firmware_mock_pass = jest.fn().mockImplementation((f, o) => {
+    // creates a resolving mock for download
+    return Promise.resolve({hexpath: '/path/to/file', tmpdir: 'data'});
+  });
+
+  const flash_firmware_mock_fail = jest.fn().mockImplementation((hp, o) => {
+    // creates a rejecting mock for download
+    return Promise.reject(new Error('Cannot flash firmware'));
+  });
+
   beforeEach(() => {
     jest.resetModules();
     interchange = new Interchange();
   });
 
   test('3.1 Throw error if no firmware given to installer', (done) => {
-    const install_firmware = () => { interchange.install_firmware(null) };
     expect.assertions(1)
     return interchange.install_firmware(null)
       .catch(err => {
         expect(err.toString()).toMatch(/firmware/);
         done();
       });
-    // return expect(install_firmware).rejects.toThrowError(/firmware/);
   });
 
   test('3.2 Throw error if failure of firmware check', () => {
@@ -113,6 +131,38 @@ const interchange_install = () => describe('3. Installation actions should run c
     expect(no_firmware_name).toThrowError(/firmware/);
     expect(invalid_firmware_name).toThrowError(/firmware/);
   });
+
+  test('3.3 Install should throw the error if download fails', (done) => {
+    const {fw, options} = data;
+
+    interchange.check_firmware = check_firmware_mock_pass;
+    interchange.download_firmware = download_firmware_mock_fail;
+
+    expect.assertions(1);
+    return interchange.install_firmware(fw, options)
+      .catch(err => {
+        expect(err.toString()).toMatch(/download/);
+        done();
+      });
+  });
+
+  test('3.4 Install should throw an error if the flash fails', (done) => {
+    const {fw, options} = data;
+
+    interchange.check_firmware = check_firmware_mock_pass;
+    interchange.download_firmware = download_firmware_mock_pass;
+    interchange.flash_firmware = flash_firmware_mock_fail;
+
+    expect.assertions(1);
+    return interchange.install_firmware(fw, options)
+      .catch(err => {
+        expect(err.toString()).toMatch(/flash/);
+        done();
+      });
+  });
+  // TODO: Continue checks here of the flow happening and aborting at the right moments
+  // install should fail if flash fails
+  // install should proceed under those various conditions as well.
 });
 
 const interchange_download = () => describe('4. Interchange should set up the download correctly', () => {
