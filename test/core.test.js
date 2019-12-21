@@ -1,5 +1,7 @@
+const avrgirl = require('avrgirl-arduino');
 const fs = require('fs');
 const tmp = require('tmp');
+const Serialport = require('serialport');
 
 const Interchange = require('../lib/interchange');
 
@@ -10,11 +12,15 @@ const data = require('./config/interchange');
 jest.mock('../lib/downloader');
 const Downloader = require('../lib/downloader');
 
+jest.mock('avrgirl-arduino');
+// jest.mock('serialport');
+
 let interchange;
 
 const interchange_shape = () => describe('1.Shape of the interchange object is correct', () => {
   // Check that all of the lib works properly.
-  beforeAll(() => {
+  beforeEach(() => {
+    jest.resetModules();
     interchange = new Interchange();
   });
 
@@ -29,6 +35,10 @@ const interchange_shape = () => describe('1.Shape of the interchange object is c
 
   test('1.2 can we get the ports', () => {
     // do this as a promise and then execute
+    Serialport.list = jest.fn().mockImplementation(() => {
+      const ports = [{path: '/dev/to/path'}];
+      return Promise.resolve(ports );
+    });
     return interchange.get_ports().then(ports => {
       expect(ports).toBeDefined();
     });
@@ -45,11 +55,25 @@ const interchange_shape = () => describe('1.Shape of the interchange object is c
   test('1.4 Does the firwares object exist', () => {
     expect(interchange.firmwares).toBeDefined();
   });
+
+  test('1.5 If there is an error with getting the ports does it get shown', (done) => {
+    Serialport.list = jest.fn().mockImplementation(() => {
+      return Promise.reject(new Error('cannot list serialports'));
+    });
+
+    expect.assertions(1);
+    return interchange.get_ports()
+      .catch(err => {
+        expect(err.toString()).toMatch(/serialports/);
+        done();
+      });
+  });
 });
 
 const interchange_utilities = () => describe('2. Utility actions should run correctly', () => {
   // Check that the various utility actions occur properly.
   beforeAll(() => {
+    jest.resetModules();
     interchange = new Interchange();
   });
 
@@ -66,7 +90,8 @@ const interchange_utilities = () => describe('2. Utility actions should run corr
 });
 
 const interchange_install = () => describe('3. Installation actions should run correctly', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    jest.resetModules();
     interchange = new Interchange();
   });
 
@@ -91,9 +116,9 @@ const interchange_install = () => describe('3. Installation actions should run c
 });
 
 const interchange_download = () => describe('4. Interchange should set up the download correctly', () => {
-  beforeAll(() => {
-    interchange = new Interchange();
+  beforeEach(() => {
     jest.resetModules();
+    interchange = new Interchange();
   });
 
   test('4.1 Download fails if no firmware is supplied', () => {
@@ -124,7 +149,34 @@ const interchange_download = () => describe('4. Interchange should set up the do
   });
 });
 
+const interchange_flash = () => describe('5. Flashing of firmware is handled properly', () => {
+  // Check that all of the lib works properly.
+  beforeEach(() => {
+    jest.resetModules();
+    interchange = new Interchange();
+  });
+
+  test('5.1 If flash fails it should throw an error from the promise', (done) => {
+    const { fw, options } = data;
+    // set up a mock implementation so we don't need to install package via npm
+    avrgirl.mockImplementation(() => {
+      return {
+        flash: (f, cb) => {
+          const err = new Error('cannot write to serialport');
+          cb(err);
+        }
+      }
+    });
+    expect.assertions(1);
+    return interchange.flash_firmware(fw, options)
+      .catch(err => {
+        expect(err.toString()).toMatch(/write/);
+        done();
+      });
+  });
+});
 interchange_shape();
 interchange_utilities();
 interchange_install();
 interchange_download();
+interchange_flash();
