@@ -57,7 +57,10 @@ program.command('install [firmware]')
   .option('--interactive', 'Interactive mode will prompt for input')
   .action(function(firmware, opts) {
     if (opts.interactive) {
-      const inquire = new Inquire(interchange.install_firmware.bind(interchange));
+      // Wait for the inquirer to initialise then call the prompt
+      new Inquire(interchange.install_firmware.bind(interchange))
+        .then((inquire) => inquire.prompt())
+        .catch(err => { throw err });
     } else {
       interchange.install_firmware(firmware, opts);
     }
