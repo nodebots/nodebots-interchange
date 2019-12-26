@@ -14,6 +14,7 @@ const inquirer_tests = () => describe('1. CLI for Interchange', () => {
   });
 
   beforeEach(async() => {
+    jest.resetModules();
     inquire = await new Inquire((firmware, options) => {
       // console.log('Calling back from constructor', firmware, options);
     });
