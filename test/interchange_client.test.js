@@ -4,6 +4,15 @@ const MockBinding = require('@serialport/binding-mock');
 const interchange_client = require('../lib/interchange_client');
 
 let ic_client;
+const returned_fw = {
+  fw_version: '0.1.0',
+  creatorID: 0,
+  firmwareID: 0,
+  ic_version: '0.2.1',
+  compile_date: '28 Dec 2019',
+  i2c_address: 39,
+  use_custom_addr: 0
+};
 
 const client_shape = () => describe('1. Client Shape is correct', () => {
   // look at the set up etc and make sure everything looks correct.
@@ -181,6 +190,54 @@ const client_info = () => describe('4. Get Info related actions', () => {
         expect(ic_client_info.serialport.binding.lastWrite.toString()).toBe('DUMP\n');
         done();
       });
+    });
+
+    ic_client_info.port = '/dev/dummy.info';
+  });
+
+  test('4.2 Get info should return an error if it cannot return a JSON object', (done) => {
+    ic_client_info.on('ready', () => {
+      ic_client_info.get_info((err) => {
+        if (err) {
+          expect(err.toString()).toMatch(/SyntaxError/);
+          done();
+        }
+      });
+
+      setImmediate(() => {
+        if (ic_client_info.serialport.binding.lastWrite.toString() == 'DUMP\n') {
+          ic_client_info.serialport.binding.emitData("{name:'test', invalid_key:}\r\n");
+        }
+      });
+    });
+
+    ic_client_info.port = '/dev/dummy.info';
+  });
+
+  test('4.3 Get info should return a proper object', (done) => {
+    ic_client_info.on('ready', () => {
+      ic_client_info.get_info((err, dump) => {
+        if (err) {
+          throw err;
+        }
+
+        expect(dump).toBeDefined();
+        expect(dump.fw_version).toBeDefined();
+        expect(dump.fw_version).toBe('0.1.0');
+        expect(dump.ic_version).toBeDefined();
+        expect(dump.ic_version).toBe('0.2.1');
+        expect(dump.i2c_address).toBeDefined();
+        expect(dump.i2c_address).toBe(39);
+        expect(dump.use_custom_addr).toBeDefined();
+        expect(dump.use_custom_addr).toBeFalsy();
+        done();
+      });
+    });
+
+    setImmediate(() => {
+      if (ic_client_info.serialport.binding.lastWrite.toString() == 'DUMP\n') {
+        ic_client_info.serialport.binding.emitData(JSON.stringify(returned_fw) + '\r\n');
+      }
     });
 
     ic_client_info.port = '/dev/dummy.info';
