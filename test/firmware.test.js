@@ -45,7 +45,7 @@ const firmware_creator = () => describe('2. Ensure creators set up correctly', (
   test('2.2 Creator list has required fields', () => {
     creators.forEach((creator) => {
       expect(creator.id).toBeDefined();
-      expect(parseInt(creator.id, 16) > 0).toBe(true); // is a number
+      expect(parseInt(creator.id, 16) >= 0).toBe(true); // is a number
       expect(creator.gh).toBeDefined();
       expect(creator.name).toBeDefined();
       expect(creator.name.length > 0).toBe(true);

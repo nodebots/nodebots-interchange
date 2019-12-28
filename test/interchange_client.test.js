@@ -29,8 +29,8 @@ const client_shape = () => describe('1. Client Shape is correct', () => {
     expect(typeof(ic_client.close)).toBe('function');
   });
 
-  test('1.2 Client should call the ready event when opened with a valid port', (done) => {
-    ic_client.on('ready', () => {
+  test('1.2 Client should call the connected event when opened with a valid port', (done) => {
+    ic_client.on('connected', () => {
       expect(ic_client.serialport.path).toBe('/dev/dummy');
       expect(ic_client.serialport.binding.isOpen).toBe(true);
       done();
