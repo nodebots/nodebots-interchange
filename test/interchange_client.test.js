@@ -232,15 +232,82 @@ const client_info = () => describe('4. Get Info related actions', () => {
         expect(dump.use_custom_addr).toBeFalsy();
         done();
       });
-    });
-
-    setImmediate(() => {
-      if (ic_client_info.serialport.binding.lastWrite.toString() == 'DUMP\n') {
-        ic_client_info.serialport.binding.emitData(JSON.stringify(returned_fw) + '\r\n');
-      }
+      setImmediate(() => {
+        if (ic_client_info.serialport.binding.lastWrite.toString() == 'DUMP\n') {
+          ic_client_info.serialport.binding.emitData(JSON.stringify(returned_fw) + '\r\n');
+        }
+      });
     });
 
     ic_client_info.port = '/dev/dummy.info';
+  });
+});
+
+const client_set_details = () => describe('5. Setting the firmware details works correctly', () => {
+  let ic_client_set;
+
+  beforeAll(() => {
+    // make a temporary serialport
+    MockBinding.createPort('/dev/dummy.set', {echo: false, record: true});
+    SerialPort.Binding = MockBinding;
+  });
+
+  afterAll(() => {
+    MockBinding.close();
+  });
+
+  beforeEach(() => {
+    jest.resetModules();
+
+    ic_client_set = new interchange_client.Client();
+
+    // set up the base handlers to help coordinate the connection
+    ic_client_set.on('connected', () => {
+      ic_client_set.serialport.binding.emitData('>>\r\n');
+    });
+
+    ic_client_set.on('data', (data) => {
+      console.log('Here is data', data);
+    });
+
+    // trigger connection with
+    // ic_client.port = '/dev/dummy.set';
+    // in the actual test when you're ready to go
+  });
+
+  afterEach(() => {
+    ic_client_set.close();
+  });
+
+  test('5.1 .set_details() calls the right serial commands', (done) => {
+    ic_client_set.on('ready', () => {
+      const fw = {
+        firmwareID: 0x02,
+        creatorID: 0x05,
+        i2c_address: 0x27,
+        use_custom_address: 0
+      };
+
+      ic_client_set.set_details(fw, () => {
+        // check in here that the data has been written appropriately
+        // we need to effect a pause here so the serial port mock binding
+        // can catch up. setImmediate is fine though as it just waits a tick
+        setImmediate(() => {
+          const cmds = ic_client_set.serialport.binding.recording.toString().split('\n');
+          expect(cmds[0]).toBe('CLR');
+          expect(cmds).toContain('FID 2');
+          expect(cmds).toContain('CID 5');
+          expect(cmds).toContain('I2C 39 0');
+          done();
+        });
+      });
+    });
+
+    ic_client_set.on('error', (err) => {
+      console.log('there was an error', err);
+    });
+
+    ic_client_set.port = '/dev/dummy.set';
   });
 });
 
@@ -248,3 +315,4 @@ client_shape();
 client_connect();
 client_data();
 client_info();
+client_set_details();
