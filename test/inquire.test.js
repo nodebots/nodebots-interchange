@@ -1,34 +1,30 @@
-const stdin = require('mock-stdin').stdin();
-
+const SerialPort = require('serialport');
+const MockBinding = require('@serialport/binding-mock');
 const Inquire = require('../lib/inquire');
-
-let inquire;
 
 const inquirer_tests = () => describe('1. CLI for Interchange', () => {
   beforeAll(() => {
-    // io = stdin();
   });
 
   afterAll(() => {
-    // io.restore();
+    jest.resetModules();
   });
 
   beforeEach(async() => {
     jest.resetModules();
-    inquire = await new Inquire((firmware, options) => {
-      // console.log('Calling back from constructor', firmware, options);
-    });
   });
 
   test('1.1 No callback to Inquire constructor should throw an error', () => {
     return expect(() => {new Inquire()}).toThrow(/No callback defined/);
   });
 
-  test('1.2 No ports provided should throw an error', () => {
+  test('1.2 No ports provided should throw an error', async() => {
+    const inquire = await new Inquire((firmware, options) => {});
     return expect(() => { inquire.promptQuestions() }).toThrow(/No ports/);
   });
 
-  test('1.3 Questions with no ports should throw an error', () => {
+  test('1.3 Questions with no ports should throw an error', async() => {
+    const inquire = await new Inquire((firmware, options) => {});
     expect(() => { inquire.questions() }).toThrow(/No ports/);
   });
 
@@ -76,17 +72,34 @@ const inquirer_tests = () => describe('1. CLI for Interchange', () => {
     expect(questions[5].when({firmware: 'node-pixel', firmata: true})).toBe(false);
   });
 
-  test('1.8 If ports are not discovered .prompt() should throw an error', () => {
+  test('1.8 If ports are not discovered .prompt() should throw an error', async() => {
     // fake the ports not being set
+    const inquire = await new Inquire((firmware, options) => {});
     inquire.ports = null;
 
     expect(() => { inquire.prompt() }).toThrow(/No ports/);
   });
 
+  test('1.9 If .get_ports() fails then constructor should reject', (done) => {
+    // make a temporary serialport
+    MockBinding.createPort('/dev/dummy', {echo: true, record: true});
+    SerialPort.Binding = MockBinding;
+
+    // set up low level regection for the SP
+    SerialPort.Binding.list = jest.fn().mockImplementation(() => {
+      return Promise.reject(new Error('Cannot find ports'));
+    });
+
+    expect.assertions(1);
+    return new Inquire(()=>{})
+      .catch(err => {
+        expect(err.toString()).toMatch(/Cannot find ports/);
+        done();
+      });
+  });
+
   // TODO: mock the inquirer.prompt call and then in the callback function
   // test that the firmware is set appropriately etc.
-  // Also mock the get ports call and then return appropriate esponses including
-  // that it throws an error if there is one
 });
 
 inquirer_tests();
