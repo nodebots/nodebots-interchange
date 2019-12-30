@@ -1,6 +1,7 @@
 const SerialPort = require('serialport');
 const MockBinding = require('@serialport/binding-mock');
 const Inquire = require('../lib/inquire');
+const inquirer = require('inquirer');
 
 const inquirer_tests = () => describe('1. CLI for Interchange', () => {
   beforeAll(() => {
@@ -86,6 +87,7 @@ const inquirer_tests = () => describe('1. CLI for Interchange', () => {
     SerialPort.Binding = MockBinding;
 
     // set up low level regection for the SP
+    const backup = SerialPort.Binding.list;
     SerialPort.Binding.list = jest.fn().mockImplementation(() => {
       return Promise.reject(new Error('Cannot find ports'));
     });
@@ -94,12 +96,39 @@ const inquirer_tests = () => describe('1. CLI for Interchange', () => {
     return new Inquire(()=>{})
       .catch(err => {
         expect(err.toString()).toMatch(/Cannot find ports/);
+        // reset the binding mock.
+        SerialPort.Binding.list = backup;
         done();
       });
   });
 
-  // TODO: mock the inquirer.prompt call and then in the callback function
-  // test that the firmware is set appropriately etc.
+  test('1.10 .promptQuestions() calls the inquire callback with answers filled', (done) => {
+    MockBinding.createPort('/dev/dummy', {echo: true, record: true});
+    SerialPort.Binding = MockBinding;
+
+    inquirer.prompt = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        firmware: 'test_firmware',
+        avr: 'nano',
+        port: '/dev/dummy',
+        firmata: false,
+        address: '0x27'
+      });
+    });
+
+    expect.assertions(6);
+    return new Inquire((fw, opts) => {
+      expect(fw).toBe('test_firmware');
+      expect(opts).toBeDefined();
+      expect(opts.board).toBe('nano');
+      expect(opts.port).toBe('/dev/dummy');
+      expect(opts.address).toBe('0x27');
+      expect(opts.firmata).toBe(false);
+      done();
+    }).then((inquire) => {
+      inquire.prompt();
+    });
+  });
 });
 
 inquirer_tests();
