@@ -1,7 +1,9 @@
+const axios         = require('axios');
 const fs            = require('fs');
 const fsextra       = require('fs-extra');
 const child_process = require('child_process');
 jest.mock('child_process');
+
 
 const Downloader = require('../lib/downloader');
 const data = require('./config/downloader');
@@ -222,6 +224,37 @@ const npm_actions = () => describe('3. NPM related actions for the downloader', 
     expect.assertions(1);
     return dl.download_from_npm(npm_fw_ver, options);
   });
+
+  test('3.5 .get_manifest_from_npm() should return a manifest file from the node_modules folder', () => {
+    const {manifest, npm_fw} = data;
+
+    const backup = fs.readFileSync;
+
+    fs.readFileSync = jest.fn().mockImplementation((path) => {
+      return JSON.stringify(manifest);
+    });
+
+    const m = dl.get_manifest_from_npm(npm_fw);
+    fs.readFileSync = backup;
+
+    expect(m).toBeDefined();
+    expect(m.backpack).toBeDefined();
+    expect(m.firmata).toBeDefined();
+  });
+
+  test('3.6 .get_manifest_from_npm() should throw an error if manifest file is incorrect', () => {
+    const {manifest, npm_fw} = data;
+
+    const backup = fs.readFileSync;
+
+    fs.readFileSync = jest.fn().mockImplementation((path) => {
+      return 'This is some non json data';
+    });
+
+    const get_manifest_error = () => {dl.get_manifest_from_npm(npm_fw)};
+    expect(get_manifest_error).toThrow(/Manifest file incorrect/);
+    fs.readFileSync = backup;
+  });
 });
 
 const github_actions = () => describe('4. Github related actions for the downloader', () => {
@@ -318,6 +351,31 @@ const github_actions = () => describe('4. Github related actions for the downloa
         expect(dl.get_file_from_github).toHaveBeenCalled();
         expect(err.toString()).toMatch(/download/);
         done();
+      });
+  });
+
+  test('4.6 get_file_from_github() handles downloads correctly', (done) => {
+    // test axios passing then failing.
+    jest.mock('axios');
+    // set up twp mocks one that passes and the other that fails.
+    axios.get = jest.fn().mockImplementationOnce((uri) => {
+      return Promise.resolve({status: '200', data: 'filedata'});
+    }).mockImplementationOnce((uri) => {
+      return Promise.reject(new Error('404'));
+    });
+
+    expect.assertions(2);
+    // call this the first time with a pass
+    return dl.get_file_from_github('passfile')
+      .then(file => {
+        expect(file).toBe('filedata');
+
+        // now we call it a second time to check failure condition
+        return dl.get_file_from_github('failfile')
+          .catch(err => {
+            expect(err.toString()).toMatch(/Unable to retrieve file/);
+            done();
+          });
       });
   });
 });
