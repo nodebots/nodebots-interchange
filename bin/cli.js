@@ -5,6 +5,7 @@ const program = require('commander');
 const version = require('../package.json').version;
 const Interchange = require('../lib/interchange');
 const Inquire = require('../lib/inquire');
+
 const interchange = new Interchange();
 
 program

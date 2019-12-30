@@ -28,8 +28,8 @@
   },
   "husky": {
     "hooks": {
-        "pre-commit": "npm test",
-        "pre-push": "npm test"
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
     }
   },
   "repository": {
@@ -65,7 +65,6 @@
     "fs-extra": "^8.1.0",
     "inquirer": "^7.0.0",
     "lodash": "^4.17.15",
-    "minimist": "^1.2.0",
     "serialport": "^8.0.5",
     "tmp": "^0.1.0"
   },
@@ -73,7 +72,6 @@
     "eslint": "^6.7.2",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
-    "mock-stdin": "^1.0.0",
     "standard-version": "^7.0.1"
   }
 }
