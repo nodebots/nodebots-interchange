@@ -1,13 +1,36 @@
 {
   "name": "nodebots-interchange",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "Tool to build custom backpack firmwares to make devices I2C compliant",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/?(*.)(spec|test).js?(x)"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/bin/",
+      "/coverage/"
+    ]
+  },
   "scripts": {
-    "test": "nodeunit test"
+    "test": "TEST=true ./node_modules/.bin/jest",
+    "lint": "./node_modules/.bin/eslint .",
+    "coverage": "TEST=true ./node_modules/.bin/jest --collectCoverage=true",
+    "release": "standard-version"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   },
   "repository": {
     "type": "git",
@@ -35,18 +58,20 @@
   "dependencies": {
     "async": "^3.1.0",
     "avrgirl-arduino": "^4.0.0",
+    "axios": "^0.19.0",
     "colors": "^1.4.0",
     "commander": "^4.0.1",
     "download": "^7.0.0",
     "fs-extra": "^8.1.0",
     "inquirer": "^7.0.0",
     "lodash": "^4.17.15",
-    "minimist": "^1.2.0",
     "serialport": "^8.0.5",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
-    "nodeunit": "^0.11.2"
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "standard-version": "^7.0.1"
   }
 }
