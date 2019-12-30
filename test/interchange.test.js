@@ -13,7 +13,6 @@ jest.mock('../lib/downloader');
 const Downloader = require('../lib/downloader');
 
 jest.mock('avrgirl-arduino');
-// jest.mock('serialport');
 
 let interchange;
 
@@ -96,6 +95,12 @@ const interchange_install = () => describe('3. Installation actions should run c
     return {fw: f, opts: o};
   });
 
+  const check_firmware_backpack_mock_pass = jest.fn().mockImplementation((f, o) => {
+    // returns an object appropriate for a backpack
+    o['useFirmata'] = false;
+    return {fw: f, opts: o};
+  });
+
   const download_firmware_mock_fail = jest.fn().mockImplementation((f, o) => {
     // creates a rejecting mock for download
     return Promise.reject(new Error('Cannot download firmware'));
@@ -119,6 +124,20 @@ const interchange_install = () => describe('3. Installation actions should run c
   const flash_firmware_mock_pass = jest.fn().mockImplementation((hp, o) => {
     // creates a resolving mock for download
     return Promise.resolve('/dev/path/to/port');
+  });
+
+  const set_firmware_details_mock_fail = jest.fn().mockImplementation((f, o) => {
+    // creates a rejecting mock for firmare config
+    return Promise.reject(new Error('Cannot configure firmware'));
+  });
+
+  const set_firmware_details_mock_pass = jest.fn().mockImplementation((f, o) => {
+    // creates a resolving mock for firmare config
+    return Promise.resolve(true);
+  });
+
+  const clean_temp_dir_mock_pass = jest.fn().mockImplementation((tmpdir) => {
+    return true;
   });
 
   beforeEach(() => {
@@ -179,6 +198,39 @@ const interchange_install = () => describe('3. Installation actions should run c
       });
   });
 
+  test('3.5 Install should throw an error if firmware config fails', (done) => {
+    const {fw_backpack, options_backpack} = data;
+
+    interchange.clean_temp_dir = clean_temp_dir_mock_pass;
+    interchange.check_firmware = check_firmware_backpack_mock_pass;
+    interchange.download_firmware = download_firmware_mock_pass;
+    interchange.flash_firmware = flash_firmware_mock_pass;
+    interchange.set_firmware_details = set_firmware_details_mock_fail;
+
+    expect.assertions(1);
+    return interchange.install_firmware('backpack_firmware_test', options_backpack)
+      .catch(err => {
+        expect(err.toString()).toMatch(/Cannot configure firmware/);
+        done();
+      });
+  });
+
+  test('3.6 Install should return true if firmware config passes', (done) => {
+    const {fw_backpack, options_backpack} = data;
+
+    interchange.clean_temp_dir = clean_temp_dir_mock_pass;
+    interchange.check_firmware = check_firmware_backpack_mock_pass;
+    interchange.download_firmware = download_firmware_mock_pass;
+    interchange.flash_firmware = flash_firmware_mock_pass;
+    interchange.set_firmware_details = set_firmware_details_mock_pass;
+
+    expect.assertions(1);
+    return interchange.install_firmware('backpack_firmware_test', options_backpack)
+      .then((result) => {
+        expect(result).toBe(true);
+        done();
+      });
+  });
   // TODO Test that the client connection etc all works as necessary to configure
   // interchange client.
 });
