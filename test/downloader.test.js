@@ -378,6 +378,13 @@ const github_actions = () => describe('4. Github related actions for the downloa
           });
       });
   });
+
+  test('4.7 normalise_gh_repo_path() processes urls correctly', () => {
+    // detemrine if we put in the right repo paths we get the right reponses.
+    expect(dl.normalise_gh_repo_path('/test/test-package')).toBe('/test/test-package');
+    expect(dl.normalise_gh_repo_path('/test/test-package.git')).toBe('/test/test-package');
+    expect(dl.normalise_gh_repo_path('/test/test-package/')).toBe('/test/test-package');
+  });
 });
 
 
