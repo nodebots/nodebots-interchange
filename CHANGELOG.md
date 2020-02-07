@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.0.1 (2020-02-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Getting downloader functionality working for github end to end
+* Refactored the download from npm functionality tobe more async and testable
+
+### Features
+
+* **test:** Added jest test spec for firmwares ([3dc708e](https://github.com/ajfisher/nodebots-interchange/commit/3dc708e4e4676d2772efbb52ad87109c812cd9a6))
+* **tests:** Added testing structure ([72f5839](https://github.com/ajfisher/nodebots-interchange/commit/72f5839b101e38aefac482ae3cc4fadd1b9c34a8))
+* **tests:** Remove travis for build process ([b4563ee](https://github.com/ajfisher/nodebots-interchange/commit/b4563ee439f155dc757bce087d1843201614d7e7))
+* **tests:** Removed old nodeunit tests ([dae49be](https://github.com/ajfisher/nodebots-interchange/commit/dae49beedcb33cfb068627c7ae474491b114b0d2))
+* added a new test firmware for gh master branch usage ([369a661](https://github.com/ajfisher/nodebots-interchange/commit/369a6613d46f212a20df6e5551dd3d4f7b1d17ae))
+* Added make command to set arduino back to blink ([5dcd1c6](https://github.com/ajfisher/nodebots-interchange/commit/5dcd1c656e85f212a512784caf35b9acc3bc3c20))
+* adding further tests for the interchange code ([e700b35](https://github.com/ajfisher/nodebots-interchange/commit/e700b357eb936ad430af299ce7f78121f6d51999))
+* beginning refactoring of downloader with tests ([901e198](https://github.com/ajfisher/nodebots-interchange/commit/901e198febe057f330a03cc8a397dfa48d36e1cd))
+* new tests added for github downloads and refactoring to suit ([b365b6c](https://github.com/ajfisher/nodebots-interchange/commit/b365b6cec9802d305360cb8b6cd2be86b19dd8ff))
+* refactor out firmware requirement of manifest interpretation and tests to suit ([7d21b95](https://github.com/ajfisher/nodebots-interchange/commit/7d21b9515062df53f02aa6e3f1e9508a8e79b8f6))
+
+
+### Bug Fixes
+
+* **actions:** Updated coverage workflow to trigger on master pushes and PRs ([b0e5006](https://github.com/ajfisher/nodebots-interchange/commit/b0e5006081da371959874c0fbf68d0aa0c85e936))
+* **package:** update fs-extra to version 7.0.0 ([22b8bc1](https://github.com/ajfisher/nodebots-interchange/commit/22b8bc10a8324e0e7d866bfea5198a9025aca53b))
+* **package:** update serialport to version 7.0.1 ([3de8982](https://github.com/ajfisher/nodebots-interchange/commit/3de898294dbf0b72eb33bba53ba7f19ab8b98752))
+* **tests:** Added tests for temp directory removal ([00712ba](https://github.com/ajfisher/nodebots-interchange/commit/00712ba5e37f63bcf4edb04dd56ccd4f8df42790))
+* made a test mode variable ([3912786](https://github.com/ajfisher/nodebots-interchange/commit/3912786113139dc5d0fd4a888c546f90313a87a0))
+* Made property on ic client to determine if sp is open and tests to support ([6b0d282](https://github.com/ajfisher/nodebots-interchange/commit/6b0d2821cf317432a76dd8a85d9fb96f98050993))
+* refactor ports command to use promises ([fb14978](https://github.com/ajfisher/nodebots-interchange/commit/fb14978d5c8a84423729b20a9afb61deecfba422))
+* Refactor the firmware listing in cli to be testable and write tests ([a0c23ce](https://github.com/ajfisher/nodebots-interchange/commit/a0c23ceb2a59c4a8d02c4b06b4a7fe49ca7f5c64))
+* refactor to return hexpath in object from npm install ([cfd94ea](https://github.com/ajfisher/nodebots-interchange/commit/cfd94ea9fe446c7b62da3fc989fe2dc771e39229))
+* Refactored the interchange client to be more testable and moved command line formatting to the cli tool ([94a7fc2](https://github.com/ajfisher/nodebots-interchange/commit/94a7fc27fdd56b687c079c8781d37d12641169a3))
+* Resolved .git urls for github package installs. Fixes [#58](https://github.com/ajfisher/nodebots-interchange/issues/58) ([627236b](https://github.com/ajfisher/nodebots-interchange/commit/627236bd726b25f167e48a4680840de1401a7de2))
+* starting to refactor the interchange lib to use promises and refactor callbacks into await flow ([5cfa2e5](https://github.com/ajfisher/nodebots-interchange/commit/5cfa2e5b04e9adc3899d6ea85087d79141af7702))
+* Tests failed and not picked up in previous commit ([3d23113](https://github.com/ajfisher/nodebots-interchange/commit/3d23113a94b5274477d63ed18a8db1580c1c2895))
+* update tests and cli to use new refactored ports ([99ad915](https://github.com/ajfisher/nodebots-interchange/commit/99ad9150589858e9958a96fa3d0d9b6abda9ab8e))
+* workflow bugs ([1226fbb](https://github.com/ajfisher/nodebots-interchange/commit/1226fbb9803ba765db0c458c50884f4b26a9942d))
+* workflow issues with coverage generation ([56a68f2](https://github.com/ajfisher/nodebots-interchange/commit/56a68f223c762dc8041aa265fa338114b3bab2dd))
+
+
+* Getting downloader functionality working for github end to end ([39459bb](https://github.com/ajfisher/nodebots-interchange/commit/39459bb820e1fe8d7e18cd0da89cccc05089ed9f))
+* Refactored the download from npm functionality tobe more async and testable ([4664bcd](https://github.com/ajfisher/nodebots-interchange/commit/4664bcd46c50ed5035808833d8f2eceb21efda92))
+
 ## [2.0.0](https://github.com/ajfisher/nodebots-interchange/compare/v1.2.1...v2.0.0) (2019-12-30)
 
 
