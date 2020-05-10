@@ -65,7 +65,7 @@
     "fs-extra": "^8.1.0",
     "inquirer": "^7.0.0",
     "lodash": "^4.17.15",
-    "serialport": "^8.0.5",
+    "serialport": "^9.0.0",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
