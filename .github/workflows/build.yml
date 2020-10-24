@@ -60,7 +60,7 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
       - name: Test with coverage
-        run: npm run test-cover
+        run: make test-coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
