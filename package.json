@@ -72,6 +72,6 @@
     "eslint": "^6.7.2",
     "husky": "^4.0.2",
     "jest": "^24.9.0",
-    "standard-version": "^7.0.1"
+    "standard-version": "^8.0.1"
   }
 }
