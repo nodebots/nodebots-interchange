@@ -1,11 +1,11 @@
 name: Build, test and coverage
-on: push
+on: pull_request
 
 jobs:
   test-matrix:
     strategy:
       matrix:
-        node: [8, 10, 12, 14]
+        node: [10, 12, 14]
     name: Test build Node v ${{ matrix.node }}
     runs-on: ubuntu-latest
     steps:
