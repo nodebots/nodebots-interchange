@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ajfisher/nodebots-interchange/compare/v2.0.1...v2.1.0) (2020-10-24)
+
+
+### Bug Fixes
+
+* error in invocation of coverage runner ([4b464a3](https://github.com/ajfisher/nodebots-interchange/commit/4b464a3f57f270a83797914fcd78fafe9be8deef))
+* moved coveralls into build workflow ([a747d6e](https://github.com/ajfisher/nodebots-interchange/commit/a747d6efe8f470cd99324891537a5cd02003e1e2))
+* pass a function to avrgirl for debugging ([67d8a7d](https://github.com/ajfisher/nodebots-interchange/commit/67d8a7dd905f0cd95a3b81e32c6f063acde6ee8d))
+* tmp changes some bahaviour around how it cleans up directories ([caab36d](https://github.com/ajfisher/nodebots-interchange/commit/caab36d79bd4ef198e29515c1c713e1cdc142649))
+* **package:** update fs-extra to version 9.0.0 ([3551532](https://github.com/ajfisher/nodebots-interchange/commit/3551532e7ff595e718e1e28a60e039acfc248eb0))
+* **package:** update serialport to version 9.0.0 ([9516163](https://github.com/ajfisher/nodebots-interchange/commit/951616378435a80a969bfe442bb32a16fe9c89a5))
+
+
+### Chores
+
+* added standard version configuration ([043164d](https://github.com/ajfisher/nodebots-interchange/commit/043164d48d3def202064fa267aa8a932b3e48045))
+* **deps:** [security] bump handlebars from 4.5.3 to 4.7.6 ([8d18962](https://github.com/ajfisher/nodebots-interchange/commit/8d189625bfa7e6ca8841a542d048314bf1add750))
+* **deps:** [security] bump yargs-parser from 13.1.1 to 13.1.2 ([7118ded](https://github.com/ajfisher/nodebots-interchange/commit/7118dedfa16cf0b10fba700e750d8dc23a29641f))
+* **deps:** bump acorn from 5.7.3 to 5.7.4 ([6288d08](https://github.com/ajfisher/nodebots-interchange/commit/6288d08c15b4a627a298272a3197aeaa31cedb35))
+* **deps:** bump async from 3.1.0 to 3.2.0 ([30879a4](https://github.com/ajfisher/nodebots-interchange/commit/30879a4b70333b90fd5ba6039ca2f607312070ba))
+* **deps:** bump avrgirl-arduino from 4.0.0 to 4.3.0 ([918bac7](https://github.com/ajfisher/nodebots-interchange/commit/918bac7a19b145524c70b2d122fef86e3d52d75a))
+* **deps:** bump axios from 0.19.0 to 0.21.0 ([86555dc](https://github.com/ajfisher/nodebots-interchange/commit/86555dcaebc88425b8747dde38b249012068da3c))
+* **deps:** bump commander from 4.0.1 to 6.1.0 ([41972f1](https://github.com/ajfisher/nodebots-interchange/commit/41972f1ee572e4a95696e7951b4e3c608d6665d2))
+* **deps:** bump decompress from 4.2.0 to 4.2.1 ([fc06a03](https://github.com/ajfisher/nodebots-interchange/commit/fc06a0349aeafacaa5015f577dd2967ad8fdd474))
+* **deps:** bump download from 7.1.0 to 8.0.0 ([194b7ce](https://github.com/ajfisher/nodebots-interchange/commit/194b7cede43a79fae38fedb30d7606c86ed5e6f8))
+* **deps:** bump fs-extra from 8.1.0 to 9.0.1 ([4cc3403](https://github.com/ajfisher/nodebots-interchange/commit/4cc34035406ae771940077ccb965978c90c997fa))
+* **deps:** bump inquirer from 7.0.0 to 7.3.3 ([2dc12ee](https://github.com/ajfisher/nodebots-interchange/commit/2dc12eebf8462e3b71d3fa5d2805010529d96c6d))
+* **deps:** bump lodash from 4.17.15 to 4.17.19 ([82a263f](https://github.com/ajfisher/nodebots-interchange/commit/82a263f7b262b221f84b367651a70266430b2190))
+* **deps:** bump lodash from 4.17.19 to 4.17.20 ([bd6907a](https://github.com/ajfisher/nodebots-interchange/commit/bd6907a923423b5f57839c2d091dec97a0de42af))
+* **deps:** bump serialport from 9.0.0 to 9.0.2 ([47604ec](https://github.com/ajfisher/nodebots-interchange/commit/47604ec8e75a268c4b80d0bab37481b70cfde322))
+* **deps:** bump tmp from 0.1.0 to 0.2.1 ([9f49941](https://github.com/ajfisher/nodebots-interchange/commit/9f499414afba3ddb8825a115f1541a470f880e20))
+* **deps-dev:** bump eslint from 6.7.2 to 7.12.0 ([dd72632](https://github.com/ajfisher/nodebots-interchange/commit/dd72632279e6b6b2950aecc5204ddef04f88c35c))
+* **deps-dev:** bump husky from 4.0.3 to 4.3.0 ([09802ce](https://github.com/ajfisher/nodebots-interchange/commit/09802ce9a334ae8c5cfa583d993b4f31d7aeb868))
+* **deps-dev:** bump jest from 24.9.0 to 26.6.1 ([12565f3](https://github.com/ajfisher/nodebots-interchange/commit/12565f32fedb160b811cdb46f14b231e47c368a2))
+* **deps-dev:** bump standard-version from 8.0.1 to 9.0.0 ([e3203b2](https://github.com/ajfisher/nodebots-interchange/commit/e3203b237bd531a63d56fb44a891ae01987a97ac))
+* Merge pull request [#68](https://github.com/ajfisher/nodebots-interchange/issues/68) from nodebots/dependabot/add-v2-config-file ([bcf0c8c](https://github.com/ajfisher/nodebots-interchange/commit/bcf0c8cd4d69e377ed4a88a502597be2d42b28dd))
+* remove node v8 from build matrix ([c48aff2](https://github.com/ajfisher/nodebots-interchange/commit/c48aff24501f5d7df5a87e7f6a3560914598fc3a))
+* **deps-dev:** bump standard-version from 7.0.1 to 8.0.1 ([8f4e733](https://github.com/ajfisher/nodebots-interchange/commit/8f4e733f3004132893eb2a5d994e8edf00919e38))
+* **package:** update lockfile package-lock.json ([df3b39a](https://github.com/ajfisher/nodebots-interchange/commit/df3b39a1cc604d267a2f9aa01fc172cc5bf86c1b))
+* **package:** update lockfile package-lock.json ([1506d64](https://github.com/ajfisher/nodebots-interchange/commit/1506d64f5fe3b85dba73de0cdc8e2172e057aba2))
+
 ### 2.0.1 (2020-02-07)
 
 
