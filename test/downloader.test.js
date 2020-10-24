@@ -270,7 +270,6 @@ const github_actions = () => describe('4. Github related actions for the downloa
     // clean up temp path if it's been set
     if (temppath) {
       fsextra.removeSync(temppath.name);
-      temppath.removeCallback();
       temppath = null;
     }
   });
