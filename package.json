@@ -60,7 +60,7 @@
     "avrgirl-arduino": "^5.0.0",
     "axios": "^0.21.0",
     "colors": "^1.4.0",
-    "commander": "^6.1.0",
+    "commander": "^7.0.0",
     "download": "^8.0.0",
     "fs-extra": "^9.0.0",
     "inquirer": "^7.0.0",
