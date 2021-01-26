@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/ajfisher/nodebots-interchange/compare/v2.1.1...v2.1.2) (2021-01-26)
+
+
+### Chores
+
+* **deps:** bump commander from 6.2.1 to 7.0.0 ([e58de5b](https://github.com/ajfisher/nodebots-interchange/commit/e58de5bf4308dc14a5e042639910319bd59920da))
+* **deps:** bump fs-extra from 9.0.1 to 9.1.0 ([5bca5a5](https://github.com/ajfisher/nodebots-interchange/commit/5bca5a5f32f68410a70c76835cff5482dc0aaf9e))
+* **deps:** bump serialport from 9.0.4 to 9.0.6 ([e8a0b0a](https://github.com/ajfisher/nodebots-interchange/commit/e8a0b0a375d655df3240bfe8b144ba62bac8e6a5))
+* **deps-dev:** bump eslint from 7.16.0 to 7.17.0 ([bfb7269](https://github.com/ajfisher/nodebots-interchange/commit/bfb72697f871df1448a0ba004bed0e513da019a1))
+* **deps-dev:** bump eslint from 7.17.0 to 7.18.0 ([062b4e1](https://github.com/ajfisher/nodebots-interchange/commit/062b4e1376ba2422d00ab784a00e2f2477cc0dd7))
+* **deps-dev:** bump husky from 4.3.6 to 4.3.7 ([63e5208](https://github.com/ajfisher/nodebots-interchange/commit/63e52086f829994f98902f23cd85f1d04b4667ed))
+* **deps-dev:** bump husky from 4.3.7 to 4.3.8 ([5202fd4](https://github.com/ajfisher/nodebots-interchange/commit/5202fd409c207f45b7a1c197e99c5135f528303d))
+
 ### [2.1.1](https://github.com/ajfisher/nodebots-interchange/compare/v2.1.0...v2.1.1) (2021-01-01)
 
 
