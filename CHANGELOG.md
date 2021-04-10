@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/ajfisher/nodebots-interchange/compare/v2.1.2...v2.1.3) (2021-04-10)
+
+
+### Chores
+
+* **deps:** bump avrgirl-arduino from 5.0.0 to 5.0.1 ([9144941](https://github.com/ajfisher/nodebots-interchange/commit/91449419d155e29d2a52a0c9bc1771851c777642))
+* **deps:** bump commander from 7.0.0 to 7.1.0 ([f4f4cab](https://github.com/ajfisher/nodebots-interchange/commit/f4f4cab7c687886288aba4be6751366a246025b5))
+* **deps:** bump commander from 7.1.0 to 7.2.0 ([27ba971](https://github.com/ajfisher/nodebots-interchange/commit/27ba971686a9645548380dceb59b3db006fd733f))
+* **deps:** bump inquirer from 7.3.3 to 8.0.0 ([40c4d1a](https://github.com/ajfisher/nodebots-interchange/commit/40c4d1acefe7928c28eb7ce3d81f7c5f864e821f))
+* **deps:** bump lodash from 4.17.20 to 4.17.21 ([e1781ad](https://github.com/ajfisher/nodebots-interchange/commit/e1781adc1e81b0ff158e5bf7c44a599f65ab77f7))
+* **deps:** bump serialport from 9.0.6 to 9.0.7 ([2844f64](https://github.com/ajfisher/nodebots-interchange/commit/2844f6472fe93b517a6aff46fd59d1296a31b0c8))
+* **deps:** bump y18n from 4.0.0 to 4.0.1 ([0f571d3](https://github.com/ajfisher/nodebots-interchange/commit/0f571d309d942711234cf863dea940d6ff20fa60))
+* **deps-dev:** bump @serialport/parser-readline from 9.0.1 to 9.0.7 ([521298e](https://github.com/ajfisher/nodebots-interchange/commit/521298e3f7850050bdbb072ba556908edf6839d5))
+* **deps-dev:** bump eslint from 7.18.0 to 7.19.0 ([433588e](https://github.com/ajfisher/nodebots-interchange/commit/433588e6cf5e19862778415a565c1221a9d98d13))
+* **deps-dev:** bump eslint from 7.19.0 to 7.20.0 ([e55cd31](https://github.com/ajfisher/nodebots-interchange/commit/e55cd31ea6666c238e81d8d70db1c554ed15d4aa))
+* **deps-dev:** bump eslint from 7.20.0 to 7.21.0 ([bae0749](https://github.com/ajfisher/nodebots-interchange/commit/bae07492069b3984912f5cab4c062fc6f2777072))
+* **deps-dev:** bump eslint from 7.21.0 to 7.22.0 ([5e893df](https://github.com/ajfisher/nodebots-interchange/commit/5e893df2c1f9290b1c7e1909182d5bbd6e7d430f))
+* **deps-dev:** bump eslint from 7.22.0 to 7.23.0 ([01ac438](https://github.com/ajfisher/nodebots-interchange/commit/01ac438b7c8bc44fd5b703ec8da60fe15bc3f4eb))
+* **deps-dev:** bump husky from 4.3.8 to 5.0.9 ([4817073](https://github.com/ajfisher/nodebots-interchange/commit/48170734e5e5d1aef4cfb7776fc7af156d526138))
+* **deps-dev:** bump husky from 5.0.9 to 5.1.0 ([55d98e8](https://github.com/ajfisher/nodebots-interchange/commit/55d98e8123b055971dbdb5c0ca396d8e947539d8))
+* **deps-dev:** bump husky from 5.1.0 to 5.1.1 ([73ab09c](https://github.com/ajfisher/nodebots-interchange/commit/73ab09c246ed04a40edfd15b475d31437c2aedd6))
+* **deps-dev:** bump husky from 5.1.1 to 5.1.3 ([8965912](https://github.com/ajfisher/nodebots-interchange/commit/8965912958d8c5cba5c936f9de7dbeb8b5578afb))
+* **deps-dev:** bump husky from 5.1.3 to 5.2.0 ([2286de1](https://github.com/ajfisher/nodebots-interchange/commit/2286de181e57860c9a9133503089a7b1d9f19a6a))
+* **deps-dev:** bump husky from 5.2.0 to 6.0.0 ([c7c2dda](https://github.com/ajfisher/nodebots-interchange/commit/c7c2ddac676d5afacb16e98b62624f0ad7e77fda))
+* **deps-dev:** bump standard-version from 9.1.0 to 9.1.1 ([f72a97b](https://github.com/ajfisher/nodebots-interchange/commit/f72a97b6cde7e5e45f8042a580f25d04c8abe9fe))
+* **deps-dev:** bump standard-version from 9.1.1 to 9.2.0 ([94838cd](https://github.com/ajfisher/nodebots-interchange/commit/94838cda05ded6eeca986613e3df104adab43b51))
+
 ### [2.1.2](https://github.com/ajfisher/nodebots-interchange/compare/v2.1.1...v2.1.2) (2021-01-26)
 
 
